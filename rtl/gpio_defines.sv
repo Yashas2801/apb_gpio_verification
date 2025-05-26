@@ -1,0 +1,10 @@
+`define GPIO_RGPIO_IN 32'h0
+`define GPIO_RGPIO_OUT 32'h4
+`define GPIO_RGPIO_OE 32'h8
+`define GPIO_RGPIO_INTE 32'hc
+`define GPIO_RGPIO_PTRIG 32'h10
+`define GPIO_RGPIO_AUX 32'h14
+`define GPIO_RGPIO_CTRL 32'h18
+`define GPIO_RGPIO_INTS 32'h1c
+`define GPIO_RGPIO_ECLK 32'h20
+`define GPIO_RGPIO_NEC 32'h24
