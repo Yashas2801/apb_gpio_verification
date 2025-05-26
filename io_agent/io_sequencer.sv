@@ -1,4 +1,4 @@
-class io_sequencer extends io_sequencer #(io_sequencer);
+class io_sequencer extends uvm_sequencer #(io_xtn);
   `uvm_component_utils(io_sequencer)
   extern function new(string name, uvm_component parent);
 endclass

@@ -1,11 +1,11 @@
 class apb_driver extends uvm_driver #(apb_xtn);
   `uvm_component_utils(apb_driver);
-  virtual apb_if vif;
-  agent_config   a_cfg;
+  virtual interface_apb vif;
+  apb_agent_config a_cfg;
 
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
-  extern function void connect_phase(uvm_phase phsae);
+  extern function void connect_phase(uvm_phase phase);
   extern task drive_task(apb_xtn xtn);
   extern task run_phase(uvm_phase phase);
 endclass

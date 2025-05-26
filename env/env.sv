@@ -1,7 +1,7 @@
 class gpio_env extends uvm_env;
   `uvm_component_utils(gpio_env)
 
-  env_cfg e_cfg;
+  env_config e_cfg;
 
   apb_agent apb_agth;
   io_agent io_agth;
@@ -9,7 +9,7 @@ class gpio_env extends uvm_env;
 
   virtual_sequencer vseqrh;
 
-  gpio_scoreboard sb;
+  scoreboard sb;
 
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
@@ -32,14 +32,17 @@ function void gpio_env::build_phase(uvm_phase phase);
   io_agth  = io_agent::type_id::create("io_agth", this);
   aux_agth = aux_agent::type_id::create("aux_agth", this);
 
-  if (env_config.has_virtual_sequencer) begin
+  if (e_cfg.has_virtual_sequencer) begin
     vseqrh = virtual_sequencer::type_id::create("vseqrh", this);
   end
 
-  sb = gpio_scoreboard::type_id::create("sb", this);
+  sb = scoreboard::type_id::create("sb", this);
 endfunction
 
 function void gpio_env::connect_phase(uvm_phase phase);
   super.connect_phase(phase);
   `uvm_info(get_type_name, "In the connect phase of env", UVM_LOW);
+  vseqrh.apb_seqrh = apb_agth.seqrh;
+  vseqrh.aux_seqrh = aux_agth.seqrh;
+  vseqrh.io_seqrh  = io_agth.seqrh;
 endfunction

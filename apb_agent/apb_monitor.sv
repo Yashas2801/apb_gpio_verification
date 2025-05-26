@@ -1,7 +1,7 @@
 class apb_monitor extends uvm_monitor;
   `uvm_component_utils(apb_monitor)
 
-  virtual apb_if   vif;
+  virtual interface_apb vif;
   apb_agent_config a_cfg;
 
   extern function new(string name, uvm_component parent);

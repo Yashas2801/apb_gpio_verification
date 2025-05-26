@@ -2,12 +2,12 @@ class io_driver extends uvm_driver #(io_xtn);
 
   `uvm_component_utils(io_driver);
 
-  virtual io_if vif;
-  agent_config  a_cfg;
+  virtual interface_io vif;
+  io_agent_config a_cfg;
 
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
-  extern function void connect_phase(uvm_phase phsae);
+  extern function void connect_phase(uvm_phase phase);
   extern task drive_task(io_xtn xtn);
   extern task run_phase(uvm_phase phase);
 endclass

@@ -1,7 +1,7 @@
 class aux_agent extends uvm_agent;
-  `uvm_component_utils(aux_agent);
+  `uvm_component_utils(aux_agent)
 
-  aux_agnet_config a_cfg;
+  aux_agent_config a_cfg;
 
   aux_driver drvh;
   aux_monitor monh;
@@ -36,5 +36,5 @@ endfunction
 function void aux_agent::connect_phase(uvm_phase phase);
   super.connect_phase(phase);
   `uvm_info(get_type_name, "in the connect phase of aux_agent", UVM_LOW)
-	drvh.seq_item_port.connect(seqrh.seq_item_export);
+  drvh.seq_item_port.connect(seqrh.seq_item_export);
 endfunction

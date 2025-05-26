@@ -1,7 +1,7 @@
 class io_agent extends uvm_agent;
-  `uvm_component_utils(io_agent);
+  `uvm_component_utils(io_agent)
 
-  io_agnet_config a_cfg;
+  io_agent_config a_cfg;
 
   io_driver drvh;
   io_monitor monh;
@@ -37,5 +37,5 @@ endfunction
 function void io_agent::connect_phase(uvm_phase phase);
   super.connect_phase(phase);
   `uvm_info(get_type_name, "in the connect phase of io_agent", UVM_LOW)
-	drvh.seq_item_port.connect(seqrh.seq_item_export);
+  drvh.seq_item_port.connect(seqrh.seq_item_export);
 endfunction

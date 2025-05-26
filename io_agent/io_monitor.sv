@@ -2,10 +2,11 @@ class io_monitor extends uvm_monitor;
 
   `uvm_component_utils(io_monitor)
 
-  virtual io_if   vif;
+  virtual interface_io vif;
   io_agent_config a_cfg;
+
   extern function new(string name, uvm_component parent);
-  extern function void build_phase(uvm_phase phsae);
+  extern function void build_phase(uvm_phase phase);
   extern function void connect_phase(uvm_phase phase);
   extern task monitor();
   extern task run_phase(uvm_phase phase);
