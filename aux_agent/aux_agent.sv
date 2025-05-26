@@ -36,4 +36,5 @@ endfunction
 function void aux_agent::connect_phase(uvm_phase phase);
   super.connect_phase(phase);
   `uvm_info(get_type_name, "in the connect phase of aux_agent", UVM_LOW)
+	drvh.seq_item_port.connect(seqrh.seq_item_export);
 endfunction

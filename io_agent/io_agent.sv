@@ -37,4 +37,5 @@ endfunction
 function void io_agent::connect_phase(uvm_phase phase);
   super.connect_phase(phase);
   `uvm_info(get_type_name, "in the connect phase of io_agent", UVM_LOW)
+	drvh.seq_item_port.connect(seqrh.seq_item_export);
 endfunction

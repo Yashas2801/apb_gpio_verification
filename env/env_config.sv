@@ -2,6 +2,7 @@ class env_config extends uvm_object;
   `uvm_object_utils(env_config)
 
   bit has_virtual_sequencer;
+  bit has_scoreboard;
 
   apb_agent_config apb_a_cfg;
   io_agent_config io_a_cfg;
