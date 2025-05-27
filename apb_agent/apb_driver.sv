@@ -17,6 +17,9 @@ endfunction
 function void apb_driver::build_phase(uvm_phase phase);
   super.build_phase(phase);
   `uvm_info(get_type_name, "In the build_phase of apb_driver", UVM_LOW)
+if(!uvm_config_db#(apb_agent_config)::get(this,"","apb_agent_config",a_cfg))begin
+	`uvm_fatal(get_type_name,"failed to get apb_agt_config in apb_driver")
+end
 endfunction
 
 function void apb_driver::connect_phase(uvm_phase phase);

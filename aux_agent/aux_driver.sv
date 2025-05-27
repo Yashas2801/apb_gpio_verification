@@ -17,6 +17,9 @@ endfunction
 function void aux_driver::build_phase(uvm_phase phase);
   super.build_phase(phase);
   `uvm_info(get_type_name, "In the build_phase of aux_driver", UVM_LOW)
+  if(!uvm_config_db#(aux_agent_config)::get(this,"","aux_agent_config",a_cfg))begin
+	`uvm_fatal(get_type_name,"failed to get aux_agt_config in aux_driver")
+  end
 endfunction
 
 function void aux_driver::connect_phase(uvm_phase phase);

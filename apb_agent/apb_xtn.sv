@@ -2,7 +2,7 @@ class apb_xtn extends uvm_sequence_item;
   `uvm_object_utils(apb_xtn)
 
   rand bit PRESETn;
-  rand bit PSEL;
+  bit PSEL;
   rand bit PENABLE;
   rand bit PWRITE;
   bit PREADY;

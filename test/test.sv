@@ -62,6 +62,7 @@ function void gpio_test_base::build_phase(uvm_phase phase);
 
   uvm_config_db#(env_config)::set(this, "*", "env_config", e_cfg);
 
+ envh = gpio_env::type_id::create("envh",this); 
 endfunction
 
 function void gpio_test_base::end_of_elaboration_phase(uvm_phase phase);
