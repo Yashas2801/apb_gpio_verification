@@ -18,6 +18,8 @@ package GPIO_pkg;
   `include "apb_sequence.sv"
   `include "aux_sequence.sv"
   `include "io_sequence.sv"
+
+  `include "ral.sv"
   //NOTE: Object classes done
 
   `include "apb_driver.sv"
