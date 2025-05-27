@@ -2,7 +2,7 @@
 
 package GPIO_pkg;
   import uvm_pkg::*;
-
+  `include "gpio_defines.sv"
   `include "uvm_macros.svh"
 
   `include "apb_xtn.sv"
@@ -20,6 +20,7 @@ package GPIO_pkg;
   `include "io_sequence.sv"
 
   `include "ral.sv"
+  `include "gpio_reg_block.sv"
   //NOTE: Object classes done
 
   `include "apb_driver.sv"

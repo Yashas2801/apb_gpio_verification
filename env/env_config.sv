@@ -3,6 +3,7 @@ class env_config extends uvm_object;
 
   bit has_virtual_sequencer;
   bit has_scoreboard;
+  bit has_ral_model;
 
   apb_agent_config apb_cfg;
   io_agent_config io_cfg;

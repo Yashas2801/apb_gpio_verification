@@ -10,6 +10,7 @@ class gpio_test_base extends uvm_test;
 
   bit has_virtual_sequencer = 1;
   bit has_scoreboard = 1;
+  bit has_ral_model = 1;
 
   virtual_seqs_base vseqs_base;
 
@@ -59,10 +60,11 @@ function void gpio_test_base::build_phase(uvm_phase phase);
 
   e_cfg.has_virtual_sequencer = has_virtual_sequencer;
   e_cfg.has_scoreboard = has_scoreboard;
+  e_cfg.has_ral_model = has_ral_model;
 
   uvm_config_db#(env_config)::set(this, "*", "env_config", e_cfg);
 
- envh = gpio_env::type_id::create("envh",this); 
+  envh = gpio_env::type_id::create("envh", this);
 endfunction
 
 function void gpio_test_base::end_of_elaboration_phase(uvm_phase phase);

@@ -11,6 +11,8 @@ class gpio_env extends uvm_env;
 
   scoreboard sb;
 
+  gpio_reg_block reg_model;
+
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
   extern function void connect_phase(uvm_phase phase);
@@ -33,15 +35,22 @@ function void gpio_env::build_phase(uvm_phase phase);
   aux_agth = aux_agent::type_id::create("aux_agth", this);
 
   //NOTE:Configuring the agent after creating the instance
-  uvm_config_db#(apb_agent_config)::set(this,"apb_agth*","apb_agent_config",e_cfg.apb_cfg);
-  uvm_config_db#(aux_agent_config)::set(this,"aux_agth*","aux_agent_config",e_cfg.aux_cfg);
-  uvm_config_db#(io_agent_config)::set(this,"io_agth*","io_agent_config",e_cfg.io_cfg);
+  uvm_config_db#(apb_agent_config)::set(this, "apb_agth*", "apb_agent_config", e_cfg.apb_cfg);
+  uvm_config_db#(aux_agent_config)::set(this, "aux_agth*", "aux_agent_config", e_cfg.aux_cfg);
+  uvm_config_db#(io_agent_config)::set(this, "io_agth*", "io_agent_config", e_cfg.io_cfg);
 
   if (e_cfg.has_virtual_sequencer) begin
     vseqrh = virtual_sequencer::type_id::create("vseqrh", this);
   end
 
-  sb = scoreboard::type_id::create("sb", this);
+  if (e_cfg.has_scoreboard) begin
+    sb = scoreboard::type_id::create("sb", this);
+  end
+
+  if (e_cfg.has_ral_model) begin
+    reg_model = gpio_reg_block::type_id::create("reg_model", this);
+    reg_model.build();
+  end
 endfunction
 
 function void gpio_env::connect_phase(uvm_phase phase);
