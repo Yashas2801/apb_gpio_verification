@@ -48,7 +48,7 @@ function void gpio_env::build_phase(uvm_phase phase);
   end
 
   if (e_cfg.has_ral_model) begin
-    reg_model = gpio_reg_block::type_id::create("reg_model", this);
+    reg_model = gpio_reg_block::type_id::create("reg_model");
     reg_model.build();
   end
 endfunction

@@ -4,11 +4,12 @@ module top;
   import uvm_pkg::*;
 
   bit PCLK;
-
+  bit ext_clk_pad_i;
   always #5 PCLK = ~PCLK;
+  always #15 ext_clk_pad_i = ~ext_clk_pad_i;
 
   apb_top i1 (
-      .PCLK(intf_apb.PCLK),
+      .PCLK(PCLK),
       .PRESETn(intf_apb.PRESETn),
       .PSEL(intf_apb.PSEL),
       .PENABLE(intf_apb.PENABLE),
@@ -20,8 +21,9 @@ module top;
       .PREADY(intf_apb.PREADY),
       .aux_in(intf_aux.aux_in),
       .io_pad(intf_io.io_pad),
-      .ext_clk_pad_i(intf_io.ext_clk_pad_i)
+      .ext_clk_pad_i(ext_clk_pad_i)
   );
+
   interface_apb intf_apb (PCLK);
   interface_aux intf_aux (PCLK);
   interface_io intf_io (PCLK);

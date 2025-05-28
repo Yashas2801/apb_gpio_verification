@@ -31,10 +31,15 @@ endfunction
 task aux_driver::drive_task(aux_xtn xtn);
   `uvm_info(get_type_name, "drive task enabled", UVM_LOW)
   `uvm_info("AUX_DRV_XTN", $sformatf("printing from aux_driver \n , %s", xtn.sprint), UVM_LOW)
+  vif.drv_cb.aux_in <= xtn.aux_in;
 endtask
 
 task aux_driver::run_phase(uvm_phase phase);
   super.run_phase(phase);
-  #10;  //WARN:dummy delay, remove this
   `uvm_info(get_type_name, "In the run phase of aux_driver", UVM_LOW)
+  forever begin
+    seq_item_port.get_next_item(req);
+    drive_task(req);
+    seq_item_port.item_done;
+  end
 endtask
