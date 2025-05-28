@@ -29,7 +29,7 @@ endinterface
 interface interface_io (
     input bit PCLK
 );
-  wire   [31:0] io_pad;  // bidirectional data bus
+  wire  [31:0] io_pad;  // bidirectional data bus
 
   // io_out[i] drives io_pad[i] when io_en[i]==1, otherwise that bit is hi-Z
   logic [31:0] io_out;
@@ -45,13 +45,14 @@ interface interface_io (
 
   clocking drv_cb @(posedge PCLK);
     default input #1 output #0;
-    inout io_pad;  // drive or sample the entire bus
-    output io_out, io_en;  // tell the DUT what to drive and when
+    output io_en;
+    output io_out;
   endclocking
 
   clocking mon_cb @(posedge PCLK);
     default input #1 output #0;
     input io_pad;  // monitor every bit on the bus
+    input io_en;
   endclocking
 
   modport DRV_MP(clocking drv_cb);

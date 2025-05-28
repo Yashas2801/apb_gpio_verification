@@ -19,9 +19,9 @@ endfunction
 function void io_driver::build_phase(uvm_phase phase);
   super.build_phase(phase);
   `uvm_info(get_type_name, "In the build_phase of io_driver", UVM_LOW)
-if(!uvm_config_db#(io_agent_config)::get(this,"","io_agent_config",a_cfg))begin
-	`uvm_fatal(get_type_name,"failed to get io_agt_config in io_driver")
-end
+  if (!uvm_config_db#(io_agent_config)::get(this, "", "io_agent_config", a_cfg)) begin
+    `uvm_fatal(get_type_name, "failed to get io_agt_config in io_driver")
+  end
 endfunction
 
 function void io_driver::connect_phase(uvm_phase phase);
@@ -33,11 +33,17 @@ endfunction
 task io_driver::drive_task(io_xtn xtn);
   `uvm_info(get_type_name, "drive task enabled", UVM_LOW)
   `uvm_info("AUX_DRV_XTN", $sformatf("printing from io_driver \n , %s", xtn.sprint), UVM_LOW)
-
+  @(vif.drv_cb);
+  vif.drv_cb.io_out <= xtn.io_pad;
+  vif.drv_cb.io_en  <= xtn.io_dir;
 endtask
 
 task io_driver::run_phase(uvm_phase phase);
   super.run_phase(phase);
-  #10;  //WARN:dummy delay, remove this
   `uvm_info(get_type_name, "In the run phase of io_driver", UVM_LOW)
+  forever begin
+    seq_item_port.get_next_item(req);
+    drive_task(req);
+    seq_item_port.item_done;
+  end
 endtask

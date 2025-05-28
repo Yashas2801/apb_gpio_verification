@@ -1,6 +1,8 @@
 class env_config extends uvm_object;
   `uvm_object_utils(env_config)
 
+  bit [31:0] rgpio_oe;
+
   bit has_virtual_sequencer;
   bit has_scoreboard;
   bit has_ral_model;

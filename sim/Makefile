@@ -87,7 +87,7 @@ run_test_Questa: sv_cmp
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov1
 	
 run_test1_Questa:sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH2) $(VERBOSITY) -wlf wave_file2.wlf -l test2.log  -sv_seed random  work.top +UVM_TESTNAME=full_duplex_test
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH2) $(VERBOSITY) -wlf wave_file2.wlf -l test2.log  -sv_seed random  work.top +UVM_TESTNAME=gpio_test_output
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov2
 	
 run_test2_Questa:sv_cmp

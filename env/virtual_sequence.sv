@@ -8,6 +8,9 @@ class virtual_seqs_base extends uvm_sequence #(uvm_sequence_item);
   aux_sequencer aux_seqrh;
   io_sequencer io_seqrh;
 
+  apb_seq_output apb_out_seqh;
+  io_seq_output io_out_seqh;
+
   extern function new(string name = "virtual_seqs_base");
   extern task body;
 endclass
@@ -26,4 +29,25 @@ task virtual_seqs_base::body;
   apb_seqrh = vseqrh.apb_seqrh;
   io_seqrh  = vseqrh.io_seqrh;
   aux_seqrh = vseqrh.aux_seqrh;
+endtask
+
+class gpio_output_vseq extends virtual_seqs_base;
+  `uvm_object_utils(gpio_output_vseq)
+  extern function new(string name = "gpio_output_vseq");
+  extern task body;
+endclass
+
+function gpio_output_vseq::new(string name = "gpio_output_vseq");
+  super.new(name);
+endfunction
+
+task gpio_output_vseq::body;
+  super.body;
+  `uvm_info(get_type_name, "In the body of gpio_as_output", UVM_LOW)
+  apb_out_seqh = apb_seq_output::type_id::create("apb_out_seqh");
+  io_out_seqh  = io_seq_output::type_id::create("io_out_seqh");
+  begin
+    apb_out_seqh.start(apb_seqrh);
+    io_out_seqh.start(io_seqrh);
+  end
 endtask
