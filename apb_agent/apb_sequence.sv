@@ -46,20 +46,6 @@ task apb_seq_output::body;
     `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
 
     ////////////////////////////////////////////////////////////////////////
-    //NOTE: Clearing INTE as per the spec
-    start_item(req);
-    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
-    assert (req.randomize() with {
-      PADDR == `GPIO_RGPIO_INTE;
-      PWDATA == 32'h0000_0000;
-      PWRITE == 1'b1;
-    });
-    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
-    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
-    finish_item(req);
-    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
-
-    ////////////////////////////////////////////////////////////////////////
 
     start_item(req);
     `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
@@ -73,5 +59,19 @@ task apb_seq_output::body;
     finish_item(req);
     `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
 
+
+    ////////////////////////////////////////////////////////////////////////
+    //NOTE: Clearing INTE as per the spec
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_INTE;
+      PWDATA == 32'h0000_0000;
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
   end
 endtask

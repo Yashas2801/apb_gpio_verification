@@ -12,6 +12,7 @@ interface interface_apb (
   bit [31:0] PWDATA;
   bit [31:0] PRDATA;
   bit IRQ;
+  bit [1:0] tst_var2;
 
   clocking drv_cb @(posedge PCLK);
     default input #1 output #0;
@@ -24,6 +25,7 @@ interface interface_apb (
     output PWDATA;
     input PRDATA;
     input IRQ;
+    output tst_var2;
   endclocking
 
   clocking mon_cb @(posedge PCLK);
@@ -37,6 +39,7 @@ interface interface_apb (
     input PWDATA;
     input PRDATA;
     input IRQ;
+    input tst_var2;
   endclocking
 
   modport DRV_MP(clocking drv_cb);

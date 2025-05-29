@@ -39,7 +39,6 @@ task io_seq_output::body;
     assert (req.randomize() with {
       io_pad == 32'h0000_0000;
       io_dir == e_cfg.rgpio_oe;
-      test_var == 2'b11;
     });
     `uvm_info(get_type_name, "driving 'hz since every pin is acting as output", UVM_LOW)
     `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)

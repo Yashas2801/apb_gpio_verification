@@ -47,7 +47,9 @@ task gpio_output_vseq::body;
   apb_out_seqh = apb_seq_output::type_id::create("apb_out_seqh");
   io_out_seqh  = io_seq_output::type_id::create("io_out_seqh");
   begin
-    apb_out_seqh.start(apb_seqrh);
+    //NOTE: dont start io_seq first, before starting any seq
+    //TODO: Find the reason why is it happening
     io_out_seqh.start(io_seqrh);
+    apb_out_seqh.start(apb_seqrh);
   end
 endtask

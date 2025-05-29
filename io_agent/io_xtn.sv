@@ -3,7 +3,7 @@ class io_xtn extends uvm_sequence_item;
 
   rand bit [31:0] io_pad;
   rand bit [31:0] io_dir;
-  rand bit [1:0] test_var;
+  bit [1:0] test_var;
 
   extern function new(string name = "io_xtn");
   extern function void do_print(uvm_printer printer);
