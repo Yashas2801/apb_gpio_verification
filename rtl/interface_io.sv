@@ -34,6 +34,7 @@ interface interface_io (
   // io_out[i] drives io_pad[i] when io_en[i]==1, otherwise that bit is hi-Z
   logic [31:0] io_out;
   bit   [31:0] io_en;
+  bit [1:0]test_var;
 
   // Per-bit tri-state assignment
   genvar i;
@@ -47,12 +48,14 @@ interface interface_io (
     default input #1 output #0;
     output io_en;
     output io_out;
+    output test_var;
   endclocking
 
   clocking mon_cb @(posedge PCLK);
     default input #1 output #0;
     input io_pad;  // monitor every bit on the bus
     input io_en;
+    input test_var;
   endclocking
 
   modport DRV_MP(clocking drv_cb);

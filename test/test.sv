@@ -100,7 +100,7 @@ endfunction
 
 function void gpio_test_output::build_phase(uvm_phase phase);
   //NOTE: making every pin act as output
-  rgpio_oe = 32'hffff_fff0;
+  rgpio_oe = 32'hffff_ffff;
   super.build_phase(phase);
 endfunction
 

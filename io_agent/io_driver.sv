@@ -28,6 +28,7 @@ function void io_driver::connect_phase(uvm_phase phase);
   super.connect_phase(phase);
   `uvm_info(get_type_name, "In the connect_phase of io_driver", UVM_LOW);
   vif = a_cfg.vif;
+  if(vif == null) `uvm_fatal(get_type_name, "vif_error")
 endfunction
 
 task io_driver::drive_task(io_xtn xtn);
@@ -35,13 +36,15 @@ task io_driver::drive_task(io_xtn xtn);
   `uvm_info("AUX_DRV_XTN", $sformatf("printing from io_driver \n , %s", xtn.sprint), UVM_LOW)
   @(vif.drv_cb);
   vif.drv_cb.io_out <= xtn.io_pad;
-  vif.drv_cb.io_en  <= xtn.io_dir;
+  vif.drv_cb.io_en  <= ~xtn.io_dir;
+  vif.drv_cb.test_var <= xtn.test_var;
 endtask
 
 task io_driver::run_phase(uvm_phase phase);
   super.run_phase(phase);
   `uvm_info(get_type_name, "In the run phase of io_driver", UVM_LOW)
   forever begin
+    vif.drv_cb.test_var <= 2'b10;
     seq_item_port.get_next_item(req);
     drive_task(req);
     seq_item_port.item_done;

@@ -1,0 +1,203 @@
+# vsim -cvgperinstance -vopt -voptargs="+acc" -coverage -sva -c -do " log -r /* ;coverage save -onexit mem_cov1;run -all; exit" "+UVM_VERBOSITY=UVM_MEDIUM" -wlf wave_file1.wlf -l test1.log -sv_seed random work.top "+UVM_TESTNAME=gpio_test_base" 
+# Start time: 09:37:37 on May 29,2025
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
+# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# //  Questa Sim-64
+# //  Version 2022.1_2 linux_x86_64 Apr  2 2022
+# //
+# //  Copyright 1991-2022 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
+# Loading sv_std.std
+# Loading work.interface_apb(fast)
+# Loading work.interface_io(fast)
+# Loading work.interface_aux(fast)
+# Loading mtiUvm.uvm_pkg(fast)
+# Loading work.GPIO_pkg(fast)
+# Loading mtiUvm.questa_uvm_pkg(fast)
+# Loading work.top(fast)
+# Loading work.apb_top(fast)
+# Loading work.apb_if(fast)
+# Loading work.apb_fsm(fast)
+# Loading work.register(fast)
+# Loading work.aux_if(fast)
+# Loading work.aux_reg(fast)
+# Loading work.apb_io(fast)
+# Loading work.interface_apb(fast__2)
+# Loading work.interface_aux(fast__2)
+# Loading work.interface_io(fast__2)
+# ** Warning: (vsim-8441) Clocking block output vif.drv_cb.PWRITE is not legal in this
+# or another expression.
+#    Time: 0 ps  Iteration: 0  Region: /GPIO_pkg::apb_driver File: ../apb_agent/apb_driver.sv Line: 38
+# Loading /home/cad/eda/Mentor_Graphics/Questasim/questasim/uvm-1.1d/linux_x86_64/uvm_dpi.so
+# ** Warning: (vsim-8634) Code was not compiled with coverage options.
+# Sv_Seed = 1599801049
+#  log -r /* 
+# coverage save -onexit mem_cov1
+# run -all
+# ----------------------------------------------------------------
+# UVM-1.1d
+# (C) 2007-2013 Mentor Graphics Corporation
+# (C) 2007-2013 Cadence Design Systems, Inc.
+# (C) 2006-2013 Synopsys, Inc.
+# (C) 2011-2013 Cypress Semiconductor Corp.
+# ----------------------------------------------------------------
+# 
+#   ***********       IMPORTANT RELEASE NOTES         ************
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_NO_DEPRECATED undefined.
+#   See http://www.eda.org/svdb/view.php?id=3313 for more details.
+# 
+#   You are using a version of the UVM library that has been compiled
+#   with `UVM_OBJECT_MUST_HAVE_CONSTRUCTOR undefined.
+#   See http://www.eda.org/svdb/view.php?id=3770 for more details.
+# 
+#       (Specify +UVM_NO_RELNOTES to turn off this notice)
+# 
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(277) @ 0: reporter [Questa UVM] QUESTA_UVM-1.2.3
+# UVM_INFO verilog_src/questa_uvm_pkg-1.2/src/questa_uvm_pkg.sv(278) @ 0: reporter [Questa UVM]  questa_uvm::init(+struct)
+# UVM_INFO @ 0: reporter [RNTST] Running test gpio_test_base...
+# UVM_INFO ../test/test.sv(58) @ 0: uvm_test_top [gpio_test_base] In the build_phase of base test
+# UVM_INFO ../env/env.sv(31) @ 0: uvm_test_top.envh [gpio_env] In the build_phase of env
+# UVM_INFO ../apb_agent/apb_agent.sv(16) @ 0: uvm_test_top.envh.apb_agth [apb_agent] In build_phase of apb_agent
+# UVM_INFO ../apb_agent/apb_driver.sv(19) @ 0: uvm_test_top.envh.apb_agth.drvh [apb_driver] In the build_phase of apb_driver
+# UVM_INFO ../apb_agent/apb_monitor.sv(24) @ 0: uvm_test_top.envh.apb_agth.monh [apb_monitor] In the build phase of apb_monitor
+# UVM_INFO ../aux_agent/aux_agent.sv(22) @ 0: uvm_test_top.envh.aux_agth [aux_agent] in the build phase of aux agent
+# UVM_INFO ../aux_agent/aux_driver.sv(20) @ 0: uvm_test_top.envh.aux_agth.drvh [aux_driver] In the build_phase of aux_driver
+# UVM_INFO ../aux_agent/aux_monitor.sv(25) @ 0: uvm_test_top.envh.aux_agth.monh [aux_monitor] In the build phase of aux_monitor
+# UVM_INFO ../io_agent/io_agent.sv(22) @ 0: uvm_test_top.envh.io_agth [io_agent] in the build phase of io agent
+# UVM_INFO ../io_agent/io_driver.sv(21) @ 0: uvm_test_top.envh.io_agth.drvh [io_driver] In the build_phase of io_driver
+# UVM_INFO ../io_agent/io_monitor.sv(26) @ 0: uvm_test_top.envh.io_agth.monh [io_monitor] In the build phase of io_monitor
+# UVM_INFO ../apb_agent/apb_driver.sv(27) @ 0: uvm_test_top.envh.apb_agth.drvh [apb_driver] In the connect_phase of apb_driver
+# UVM_INFO ../apb_agent/apb_monitor.sv(35) @ 0: uvm_test_top.envh.apb_agth.monh [apb_monitor] in the connect phase of monitor
+# UVM_INFO ../apb_agent/apb_agent.sv(32) @ 0: uvm_test_top.envh.apb_agth [apb_agent] In connect_phase of apb_agent
+# UVM_INFO ../aux_agent/aux_driver.sv(28) @ 0: uvm_test_top.envh.aux_agth.drvh [aux_driver] In the connect_phase of aux_driver
+# UVM_INFO ../aux_agent/aux_monitor.sv(35) @ 0: uvm_test_top.envh.aux_agth.monh [aux_monitor] in the connect phase of monitor
+# UVM_INFO ../aux_agent/aux_agent.sv(38) @ 0: uvm_test_top.envh.aux_agth [aux_agent] in the connect phase of aux_agent
+# UVM_INFO ../io_agent/io_driver.sv(29) @ 0: uvm_test_top.envh.io_agth.drvh [io_driver] In the connect_phase of io_driver
+# UVM_INFO ../io_agent/io_monitor.sv(35) @ 0: uvm_test_top.envh.io_agth.monh [io_monitor] in the connect phase of monitor
+# UVM_INFO ../io_agent/io_agent.sv(39) @ 0: uvm_test_top.envh.io_agth [io_agent] in the connect phase of io_agent
+# UVM_INFO ../env/env.sv(58) @ 0: uvm_test_top.envh [gpio_env] In the connect phase of env
+# UVM_INFO ../test/test.sv(77) @ 0: uvm_test_top [gpio_test_base] In the end_of_elaboration_phase of test
+# UVM_INFO @ 0: reporter [UVMTOP] UVM testbench topology:
+# ------------------------------------------------------------------
+# Name                       Type                        Size  Value
+# ------------------------------------------------------------------
+# uvm_test_top               gpio_test_base              -     @485 
+#   envh                     gpio_env                    -     @503 
+#     apb_agth               apb_agent                   -     @511 
+#       drvh                 apb_driver                  -     @855 
+#         rsp_port           uvm_analysis_port           -     @870 
+#         seq_item_port      uvm_seq_item_pull_port      -     @862 
+#       monh                 apb_monitor                 -     @848 
+#         ana_port           uvm_analysis_port           -     @993 
+#       seqrh                apb_sequencer               -     @878 
+#         rsp_export         uvm_analysis_export         -     @885 
+#         seq_item_export    uvm_seq_item_pull_imp       -     @979 
+#         arbitration_queue  array                       0     -    
+#         lock_queue         array                       0     -    
+#         num_last_reqs      integral                    32    'd1  
+#         num_last_rsps      integral                    32    'd1  
+#     aux_agth               aux_agent                   -     @525 
+#       drvh                 aux_driver                  -     @1015
+#         rsp_port           uvm_analysis_port           -     @1030
+#         seq_item_port      uvm_seq_item_pull_port      -     @1022
+#       monh                 aux_monitor                 -     @1008
+#         ana_port           uvm_analysis_port           -     @1153
+#       seqrh                aux_sequencer               -     @1038
+#         rsp_export         uvm_analysis_export         -     @1045
+#         seq_item_export    uvm_seq_item_pull_imp       -     @1139
+#         arbitration_queue  array                       0     -    
+#         lock_queue         array                       0     -    
+#         num_last_reqs      integral                    32    'd1  
+#         num_last_rsps      integral                    32    'd1  
+#     io_agth                io_agent                    -     @518 
+#       drvh                 io_driver                   -     @1175
+#         rsp_port           uvm_analysis_port           -     @1190
+#         seq_item_port      uvm_seq_item_pull_port      -     @1182
+#       monh                 io_monitor                  -     @1168
+#         ana_port           uvm_analysis_port           -     @1313
+#       seqrh                io_sequencer                -     @1198
+#         rsp_export         uvm_analysis_export         -     @1205
+#         seq_item_export    uvm_seq_item_pull_imp       -     @1299
+#         arbitration_queue  array                       0     -    
+#         lock_queue         array                       0     -    
+#         num_last_reqs      integral                    32    'd1  
+#         num_last_rsps      integral                    32    'd1  
+#     sb                     scoreboard                  -     @653 
+#       apb_fifo             uvm_tlm_analysis_fifo #(T)  -     @660 
+#         analysis_export    uvm_analysis_imp            -     @699 
+#         get_ap             uvm_analysis_port           -     @691 
+#         get_peek_export    uvm_get_peek_imp            -     @675 
+#         put_ap             uvm_analysis_port           -     @683 
+#         put_export         uvm_put_imp                 -     @667 
+#       aux_fifo             uvm_tlm_analysis_fifo #(T)  -     @707 
+#         analysis_export    uvm_analysis_imp            -     @746 
+#         get_ap             uvm_analysis_port           -     @738 
+#         get_peek_export    uvm_get_peek_imp            -     @722 
+#         put_ap             uvm_analysis_port           -     @730 
+#         put_export         uvm_put_imp                 -     @714 
+#       io_fifo              uvm_tlm_analysis_fifo #(T)  -     @754 
+#         analysis_export    uvm_analysis_imp            -     @793 
+#         get_ap             uvm_analysis_port           -     @785 
+#         get_peek_export    uvm_get_peek_imp            -     @769 
+#         put_ap             uvm_analysis_port           -     @777 
+#         put_export         uvm_put_imp                 -     @761 
+#     vseqrh                 virtual_sequencer           -     @544 
+#       rsp_export           uvm_analysis_export         -     @551 
+#       seq_item_export      uvm_seq_item_pull_imp       -     @645 
+#       arbitration_queue    array                       0     -    
+#       lock_queue           array                       0     -    
+#       num_last_reqs        integral                    32    'd1  
+#       num_last_rsps        integral                    32    'd1  
+# ------------------------------------------------------------------
+# 
+# UVM_INFO ../io_agent/io_monitor.sv(50) @ 0: uvm_test_top.envh.io_agth.monh [io_monitor] in run phase of io_monitor
+# UVM_INFO ../io_agent/io_monitor.sv(40) @ 0: uvm_test_top.envh.io_agth.monh [io_monitor] monitor task invoked
+# UVM_INFO ../io_agent/io_driver.sv(43) @ 0: uvm_test_top.envh.io_agth.drvh [io_driver] In the run phase of io_driver
+# UVM_INFO ../aux_agent/aux_monitor.sv(49) @ 0: uvm_test_top.envh.aux_agth.monh [aux_monitor] in run phase of aux_monitor
+# UVM_INFO ../aux_agent/aux_monitor.sv(40) @ 0: uvm_test_top.envh.aux_agth.monh [aux_monitor] monitor task invoked
+# UVM_INFO ../aux_agent/aux_driver.sv(41) @ 0: uvm_test_top.envh.aux_agth.drvh [aux_driver] In the run phase of aux_driver
+# UVM_INFO ../apb_agent/apb_monitor.sv(60) @ 0: uvm_test_top.envh.apb_agth.monh [apb_monitor] in run phase of apb_monitor
+# UVM_INFO ../apb_agent/apb_monitor.sv(40) @ 0: uvm_test_top.envh.apb_agth.monh [apb_monitor] monitor task invoked
+# UVM_INFO ../apb_agent/apb_driver.sv(51) @ 0: uvm_test_top.envh.apb_agth.drvh [apb_driver] In the run phase of apb_driver
+# UVM_INFO verilog_src/uvm-1.1d/src/base/uvm_objection.svh(1267) @ 0: reporter [TEST_DONE] 'run' phase is ready to proceed to the 'extract' phase
+# 
+# --- UVM Report Summary ---
+# 
+# ** Report counts by severity
+# UVM_INFO :   36
+# UVM_WARNING :    0
+# UVM_ERROR :    0
+# UVM_FATAL :    0
+# ** Report counts by id
+# [Questa UVM]     2
+# [RNTST]     1
+# [TEST_DONE]     1
+# [UVMTOP]     1
+# [apb_agent]     2
+# [apb_driver]     3
+# [apb_monitor]     4
+# [aux_agent]     2
+# [aux_driver]     3
+# [aux_monitor]     4
+# [gpio_env]     2
+# [gpio_test_base]     2
+# [io_agent]     2
+# [io_driver]     3
+# [io_monitor]     4
+# ** Note: $finish    : /home/cad/eda/Mentor_Graphics/Questasim/questasim/linux_x86_64/../verilog_src/uvm-1.1d/src/base/uvm_root.svh(430)
+#    Time: 0 ps  Iteration: 219  Instance: /top
+# Saving coverage database on exit...
+# End time: 09:37:39 on May 29,2025, Elapsed time: 0:00:02
+# Errors: 0, Warnings: 3

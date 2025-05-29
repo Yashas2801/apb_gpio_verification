@@ -41,6 +41,7 @@ task io_monitor::monitor;
   @(vif.mon_cb);
   xtn.io_pad = vif.mon_cb.io_pad;
   xtn.io_dir = vif.mon_cb.io_en;
+  xtn.test_var = vif.mon_cb.test_var;
   `uvm_info(get_type_name, $sformatf("Printing from io_monitor \n %s", xtn.sprint), UVM_LOW)
   ana_port.write(xtn);
 endtask
