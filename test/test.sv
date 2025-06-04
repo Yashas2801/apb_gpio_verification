@@ -18,7 +18,10 @@ class gpio_test_base extends uvm_test;
   gpio_output_vseq out_vseqh;
   gpio_output_aux_vseq out_aux_vseqh;
   gpio_input_int1_vseq in_int1_vseqh;
-  
+  gpio_input_int2_vseq in_int2_vseqh;
+  gpio_input_ext1_vseq in_ext1_vseqh;
+  gpio_input_ext2_vseq in_ext2_vseqh;
+  gpio_bidir_vseq bidir_vseqh;
 
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
@@ -158,8 +161,110 @@ function void gpio_test_input_int1::build_phase(uvm_phase phase);
 endfunction
 
 task gpio_test_input_int1::run_phase(uvm_phase phase);
-  in_int1_vseqh  = gpio_input_int1_vseq::type_id::create("in_int1_vseqh");
+  in_int1_vseqh = gpio_input_int1_vseq::type_id::create("in_int1_vseqh");
   phase.raise_objection(this);
   in_int1_vseqh.start(envh.vseqrh);
+  phase.drop_objection(this);
+endtask
+
+class gpio_test_input_int2 extends gpio_test_base;
+  `uvm_component_utils(gpio_test_input_int2)
+
+  extern function new(string name, uvm_component parent);
+  extern function void build_phase(uvm_phase phase);
+  extern task run_phase(uvm_phase phase);
+endclass
+
+function gpio_test_input_int2::new(string name, uvm_component parent);
+  super.new(name, parent);
+endfunction
+
+function void gpio_test_input_int2::build_phase(uvm_phase phase);
+  //NOTE: making every pin act as input
+  rgpio_oe = 32'h0000_0000;
+  super.build_phase(phase);
+endfunction
+
+task gpio_test_input_int2::run_phase(uvm_phase phase);
+  in_int2_vseqh = gpio_input_int2_vseq::type_id::create("in_int2_vseqh");
+  phase.raise_objection(this);
+  in_int2_vseqh.start(envh.vseqrh);
+  phase.drop_objection(this);
+endtask
+
+class gpio_test_input_ext1 extends gpio_test_base;
+  `uvm_component_utils(gpio_test_input_ext1)
+
+  extern function new(string name, uvm_component parent);
+  extern function void build_phase(uvm_phase phase);
+  extern task run_phase(uvm_phase phase);
+endclass
+
+function gpio_test_input_ext1::new(string name, uvm_component parent);
+  super.new(name, parent);
+endfunction
+
+function void gpio_test_input_ext1::build_phase(uvm_phase phase);
+  //NOTE: making every pin act as input
+  rgpio_oe = 32'h0000_0000;
+  super.build_phase(phase);
+endfunction
+
+task gpio_test_input_ext1::run_phase(uvm_phase phase);
+  in_ext1_vseqh = gpio_input_ext1_vseq::type_id::create("in_ext1_vseqh");
+  phase.raise_objection(this);
+  in_ext1_vseqh.start(envh.vseqrh);
+  phase.drop_objection(this);
+endtask
+
+class gpio_test_input_ext2 extends gpio_test_base;
+  `uvm_component_utils(gpio_test_input_ext2)
+
+  extern function new(string name, uvm_component parent);
+  extern function void build_phase(uvm_phase phase);
+  extern task run_phase(uvm_phase phase);
+endclass
+
+function gpio_test_input_ext2::new(string name, uvm_component parent);
+  super.new(name, parent);
+endfunction
+
+function void gpio_test_input_ext2::build_phase(uvm_phase phase);
+  //NOTE: making every pin act as input
+  rgpio_oe = 32'h0000_0000;
+  super.build_phase(phase);
+endfunction
+
+task gpio_test_input_ext2::run_phase(uvm_phase phase);
+  in_ext2_vseqh = gpio_input_ext2_vseq::type_id::create("in_ext2_vseqh");
+  phase.raise_objection(this);
+  in_ext2_vseqh.start(envh.vseqrh);
+  phase.drop_objection(this);
+endtask
+
+//NOTE: Bidirectional
+
+class gpio_test_bidir extends gpio_test_base;
+  `uvm_component_utils(gpio_test_bidir)
+
+  extern function new(string name, uvm_component parent);
+  extern function void build_phase(uvm_phase phase);
+  extern task run_phase(uvm_phase phase);
+endclass
+
+function gpio_test_bidir::new(string name, uvm_component parent);
+  super.new(name, parent);
+endfunction
+
+function void gpio_test_bidir::build_phase(uvm_phase phase);
+  //NOTE: making every pin act as input
+  rgpio_oe = 32'hffff_0000;
+  super.build_phase(phase);
+endfunction
+
+task gpio_test_bidir::run_phase(uvm_phase phase);
+  bidir_vseqh = gpio_bidir_vseq::type_id::create("bidir_vseqh");
+  phase.raise_objection(this);
+  bidir_vseqh.start(envh.vseqrh);
   phase.drop_objection(this);
 endtask

@@ -99,19 +99,19 @@ run_test3_Questa:sv_cmp
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov4
  
 run_test4_Questa:sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH5) $(VERBOSITY) -wlf wave_file5.wlf -l test5.log  -sv_seed $(SEED_NO) work.top +UVM_TESTNAME=parity_error_test
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH5) $(VERBOSITY) -wlf wave_file5.wlf -l test5.log  -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_int2
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov5
 
 run_test5_Questa:sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH6) $(VERBOSITY) -wlf wave_file6.wlf -l test6.log  -sv_seed 1339996228  work.top +UVM_TESTNAME=framing_error_test
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH6) $(VERBOSITY) -wlf wave_file6.wlf -l test6.log  -sv_seed random  work.top +UVM_TESTNAME=gpio_test_input_ext1
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov6
 
 run_test6_Questa:sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH7) $(VERBOSITY) -wlf wave_file7.wlf -l test7.log  -sv_seed 2087349103 work.top +UVM_TESTNAME=overrun_error_test
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH7) $(VERBOSITY) -wlf wave_file7.wlf -l test7.log  -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext2
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov7
 
 run_test7_Questa:sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH8) $(VERBOSITY) -wlf wave_file8.wlf -l test8.log  -sv_seed 3504803284 work.top +UVM_TESTNAME=breakinterrupt_error_test
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH8) $(VERBOSITY) -wlf wave_file8.wlf -l test8.log  -sv_seed random work.top +UVM_TESTNAME=gpio_test_bidir
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov8
 
 run_test8_Questa:sv_cmp

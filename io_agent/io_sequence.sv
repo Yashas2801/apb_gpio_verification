@@ -75,7 +75,7 @@ task io_seq_input_int1::body;
     finish_item(req);
     `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
 
-/////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////
 
     start_item(req);
     `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
@@ -89,3 +89,110 @@ task io_seq_input_int1::body;
     `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
   end
 endtask
+
+class io_seq_input_int2 extends io_sequence_base;
+  `uvm_object_utils(io_seq_input_int2)
+
+  extern function new(string name = "io_seq_input_int2");
+  extern task body;
+endclass
+
+function io_seq_input_int2::new(string name = "io_seq_input_int2");
+  super.new(name);
+endfunction
+
+task io_seq_input_int2::body;
+  super.body;
+  begin
+    req = io_xtn::type_id::create("req");
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    //NOTE: io_pad is not valid since io_interface drives 'hz because of
+    //io_dir
+    assert (req.randomize() with {
+      io_pad == 32'hffff_ffff;
+      io_dir == e_cfg.rgpio_oe;
+    });
+    `uvm_info(get_type_name, "driving 'hz since every pin is acting as output", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+    /////////////////////////////////////////////////////////////////////////////
+
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      io_pad == 32'h0000_0000;
+      io_dir == e_cfg.rgpio_oe;
+    });
+    `uvm_info(get_type_name, "driving 'hz since every pin is acting as output", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+  end
+endtask
+
+
+class io_seq_input_ext1 extends io_sequence_base;
+  `uvm_object_utils(io_seq_input_ext1)
+
+  extern function new(string name = "io_seq_input_ext1");
+  extern task body;
+endclass
+
+function io_seq_input_ext1::new(string name = "io_seq_input_ext1");
+  super.new(name);
+endfunction
+
+task io_seq_input_ext1::body;
+  super.body;
+  begin
+    req = io_xtn::type_id::create("req");
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    //NOTE: io_pad is not valid since io_interface drives 'hz because of
+    //io_dir
+    assert (req.randomize() with {
+      io_pad == 32'hCAFE_FABE;
+      io_dir == e_cfg.rgpio_oe;
+    });
+    `uvm_info(get_type_name, "driving 'hz since every pin is acting as output", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+  end
+endtask
+
+class io_seq_bidir extends io_sequence_base;
+  `uvm_object_utils(io_seq_bidir)
+
+  extern function new(string name = "io_seq_bidir");
+  extern task body;
+endclass
+
+function io_seq_bidir::new(string name = "io_seq_bidir");
+  super.new(name);
+endfunction
+
+task io_seq_bidir::body;
+  super.body;
+  begin
+    req = io_xtn::type_id::create("req");
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    //NOTE: io_pad is not valid since io_interface drives 'hz because of
+    //io_dir
+    assert (req.randomize() with {
+      io_pad == 32'h0000_ABFF;
+      io_dir == e_cfg.rgpio_oe;
+    });
+    `uvm_info(get_type_name, "driving 'hz since every pin is acting as output", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+  end
+endtask
+
