@@ -1,2 +1,0 @@
-var g_data = {"27":{"st":"inst","pa":0,"n":"/GPIO_pkg","l":"SystemVerilog","sn":118,"du":{"n":"work.GPIO_pkg","s":5,"b":1},"bc":[{"n":"GPIO_pkg","s":27,"z":1}],"loc":{"cp":100.00,"data":{"a":[5,5,1]}}},"5":{"st":"du","pa":0,"n":"work.GPIO_pkg","l":"SystemVerilog","sn":118,"one_inst":27,"loc":{"cp":100.00,"data":{"a":[5,5,1]}}}};
-processSummaryData(g_data);

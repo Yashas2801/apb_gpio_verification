@@ -16,6 +16,9 @@ class gpio_test_base extends uvm_test;
 
   virtual_seqs_base vseqs_base;
   gpio_output_vseq out_vseqh;
+  gpio_output_aux_vseq out_aux_vseqh;
+  gpio_input_int1_vseq in_int1_vseqh;
+  
 
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
@@ -108,5 +111,55 @@ task gpio_test_output::run_phase(uvm_phase phase);
   out_vseqh = gpio_output_vseq::type_id::create("out_vseqh");
   phase.raise_objection(this);
   out_vseqh.start(envh.vseqrh);
+  phase.drop_objection(this);
+endtask
+
+class gpio_test_output_aux extends gpio_test_base;
+  `uvm_component_utils(gpio_test_output_aux)
+
+  extern function new(string name, uvm_component parent);
+  extern function void build_phase(uvm_phase phase);
+  extern task run_phase(uvm_phase phase);
+endclass
+
+function gpio_test_output_aux::new(string name, uvm_component parent);
+  super.new(name, parent);
+endfunction
+
+function void gpio_test_output_aux::build_phase(uvm_phase phase);
+  //NOTE: making every pin act as output
+  rgpio_oe = 32'hffff_ffff;
+  super.build_phase(phase);
+endfunction
+
+task gpio_test_output_aux::run_phase(uvm_phase phase);
+  out_aux_vseqh = gpio_output_aux_vseq::type_id::create("out_aux_vseqh");
+  phase.raise_objection(this);
+  out_aux_vseqh.start(envh.vseqrh);
+  phase.drop_objection(this);
+endtask
+
+class gpio_test_input_int1 extends gpio_test_base;
+  `uvm_component_utils(gpio_test_input_int1)
+
+  extern function new(string name, uvm_component parent);
+  extern function void build_phase(uvm_phase phase);
+  extern task run_phase(uvm_phase phase);
+endclass
+
+function gpio_test_input_int1::new(string name, uvm_component parent);
+  super.new(name, parent);
+endfunction
+
+function void gpio_test_input_int1::build_phase(uvm_phase phase);
+  //NOTE: making every pin act as input
+  rgpio_oe = 32'h0000_0000;
+  super.build_phase(phase);
+endfunction
+
+task gpio_test_input_int1::run_phase(uvm_phase phase);
+  in_int1_vseqh  = gpio_input_int1_vseq::type_id::create("in_int1_vseqh");
+  phase.raise_objection(this);
+  in_int1_vseqh.start(envh.vseqrh);
   phase.drop_objection(this);
 endtask

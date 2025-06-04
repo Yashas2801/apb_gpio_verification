@@ -91,11 +91,11 @@ run_test1_Questa:sv_cmp
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov2
 	
 run_test2_Questa:sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH3) $(VERBOSITY) -wlf wave_file3.wlf -l test3.log  -sv_seed random  work.top +UVM_TESTNAME=half_duplex_test
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH3) $(VERBOSITY) -wlf wave_file3.wlf -l test3.log  -sv_seed random  work.top +UVM_TESTNAME=gpio_test_output_aux
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov3
 	
 run_test3_Questa:sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH4) $(VERBOSITY) -wlf wave_file4.wlf -l test4.log  -sv_seed random  work.top +UVM_TESTNAME=loopback_test
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH4) $(VERBOSITY) -wlf wave_file4.wlf -l test4.log  -sv_seed random  work.top +UVM_TESTNAME=gpio_test_input_int1
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov4
  
 run_test4_Questa:sv_cmp
