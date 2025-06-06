@@ -41,6 +41,24 @@ class virtual_seqs_base extends uvm_sequence #(uvm_sequence_item);
   //apb_read apb_readh;
   //io_seq_output io_out_seqh;
 
+  //NOTE:As input
+  apb_seq_input apb_in_seqh;
+  //io_seq_output io_out_seqh;
+  //apb_read apb_readh;
+  //io_seq_input_ext1 io_in_ext1_seqh;
+
+  //NOTE:Interrupt posedge triggered and posedge eclk
+  apb_seq_input_ext1_int1 apb_in_ext1_int1_seqh;
+  //io_seq_output io_out_seqh;
+  //apb_read apb_readh;
+  io_seq_set io_set_seqh;
+
+  //NOTE:Interrupt posedge triggered and negedge eclk
+  apb_seq_input_ext2_int1 apb_in_ext2_int1_seqh;
+  //io_seq_output io_out_seqh;
+  //apb_read apb_readh;
+  //io_seq_set io_set_seqh;
+
 
   extern function new(string name = "virtual_seqs_base");
   extern task body;
@@ -240,3 +258,82 @@ task gpio_bidir_vseq::body;
     apb_readh.start(apb_seqrh);
   end
 endtask
+
+//NOTE: input_wrt_sys_clk
+class gpio_input_vseq extends virtual_seqs_base;
+  `uvm_object_utils(gpio_input_vseq)
+  extern function new(string name = "gpio_input_vseq");
+  extern task body;
+endclass
+
+function gpio_input_vseq::new(string name = "gpio_input_vseq");
+  super.new(name);
+endfunction
+
+task gpio_input_vseq::body;
+  super.body;
+  io_out_seqh = io_seq_output::type_id::create("io_out_seqh");
+  apb_in_seqh = apb_seq_input::type_id::create("apb_in_seqh");
+  apb_readh = apb_read::type_id::create("apb_readh");
+  io_in_ext1_seqh = io_seq_input_ext1::type_id::create("io_in_ext1_seqh");
+  begin
+    io_out_seqh.start(io_seqrh);
+    apb_in_seqh.start(apb_seqrh);
+    io_in_ext1_seqh.start(io_seqrh); 
+    apb_readh.start(apb_seqrh);
+  end
+endtask
+
+class gpio_input_ext1_int1_vseq extends virtual_seqs_base;
+  `uvm_object_utils(gpio_input_ext1_int1_vseq)
+  extern function new(string name = "gpio_input_ext1_int1_vseq");
+  extern task body;
+endclass
+
+function gpio_input_ext1_int1_vseq::new(string name = "gpio_input_ext1_int1_vseq");
+  super.new(name);
+endfunction
+
+task gpio_input_ext1_int1_vseq::body;
+  super.body;
+  io_out_seqh = io_seq_output::type_id::create("io_out_seqh");
+  apb_in_ext1_int1_seqh = apb_seq_input_ext1_int1::type_id::create("apb_in_ext1_int1_seqh");
+  io_set_seqh = io_seq_set::type_id::create("io_set_seqh");
+  apb_readh = apb_read::type_id::create("apb_readh");
+  begin
+    io_out_seqh.start(io_seqrh);
+    apb_in_ext1_int1_seqh.start(apb_seqrh);
+    repeat(3)begin
+    	io_set_seqh.start(io_seqrh);
+    end
+    apb_readh.start(apb_seqrh);
+  end
+endtask
+
+
+class gpio_input_ext2_int1_vseq extends virtual_seqs_base;
+  `uvm_object_utils(gpio_input_ext2_int1_vseq)
+  extern function new(string name = "gpio_input_ext2_int1_vseq");
+  extern task body;
+endclass
+
+function gpio_input_ext2_int1_vseq::new(string name = "gpio_input_ext2_int1_vseq");
+  super.new(name);
+endfunction
+
+task gpio_input_ext2_int1_vseq::body;
+  super.body;
+  io_out_seqh = io_seq_output::type_id::create("io_out_seqh");
+  apb_in_ext2_int1_seqh = apb_seq_input_ext2_int1::type_id::create("apb_in_ext2_int1_seqh");
+  io_set_seqh = io_seq_set::type_id::create("io_set_seqh");
+  apb_readh = apb_read::type_id::create("apb_readh");
+  begin
+    io_out_seqh.start(io_seqrh);
+    apb_in_ext2_int1_seqh.start(apb_seqrh);
+    repeat(3)begin
+    	io_set_seqh.start(io_seqrh);
+    end
+    apb_readh.start(apb_seqrh);
+  end
+endtask
+

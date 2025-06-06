@@ -17,6 +17,7 @@ VSIMBATCH7= -c -do  " log -r /* ;coverage save -onexit mem_cov7;run -all; exit"
 VSIMBATCH8= -c -do  " log -r /* ;coverage save -onexit mem_cov8;run -all; exit"
 VSIMBATCH9= -c -do  " log -r /* ;coverage save -onexit mem_cov9;run -all; exit"
 VSIMBATCH10= -c -do  " log -r /* ;coverage save -onexit mem_cov10;run -all; exit"
+VSIMBATCH11= -c -do  " log -r /* ;coverage save -onexit mem_cov11;run -all; exit"
 VERBOSITY= +UVM_VERBOSITY=UVM_MEDIUM
 
 help:
@@ -61,6 +62,7 @@ run_test6  : run_test6_$(SIMULATOR)
 run_test7  : run_test7_$(SIMULATOR)
 run_test8  : run_test8_$(SIMULATOR)
 run_test9  : run_test9_$(SIMULATOR)
+run_test10  : run_test10_$(SIMULATOR)
 view_wave1 : view_wave1_$(SIMULATOR)
 view_wave2 : view_wave2_$(SIMULATOR)
 view_wave3 : view_wave3_$(SIMULATOR)
@@ -71,6 +73,7 @@ view_wave7 : view_wave7_$(SIMULATOR)
 view_wave8 : view_wave8_$(SIMULATOR)
 view_wave9 : view_wave9_$(SIMULATOR)
 view_wave10 : view_wave10_$(SIMULATOR)
+view_wave11 : view_wave11_$(SIMULATOR)
 regress    : regress_$(SIMULATOR)
 report     : report_$(SIMULATOR)
 cov        : cov_$(SIMULATOR)
@@ -115,13 +118,18 @@ run_test7_Questa:sv_cmp
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov8
 
 run_test8_Questa:sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH9) $(VERBOSITY) -wlf wave_file9.wlf -l test9.log  -sv_seed 2189750904  work.top +UVM_TESTNAME=timeout_error_test
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH9) $(VERBOSITY) -wlf wave_file9.wlf -l test9.log  -sv_seed random work.top +UVM_TESTNAME=gpio_test_input
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov9
 
 run_test9_Questa:sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH10) $(VERBOSITY) -wlf wave_file10.wlf -l test10.log  -sv_seed 1208779359 work.top +UVM_TESTNAME=thr_empty_test
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH10) $(VERBOSITY) -wlf wave_file10.wlf -l test10.log  -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext1_int1
 	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov10
+
+run_test10_Questa:sv_cmp
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH11) $(VERBOSITY) -wlf wave_file11.wlf -l test11.log  -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext2_int1
+	vcover report  -cvg  -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov11
  
+
 view_wave1_Questa:
 	vsim -view wave_file1.wlf
 	
@@ -152,11 +160,14 @@ view_wave9_Questa:
 view_wave10_Questa:
 	vsim -view wave_file10.wlf
 
+view_wave11_Questa:
+	vsim -view wave_file11.wlf
+
 report_Questa:
-	vcover merge mem_cov mem_cov1 mem_cov2 mem_cov3 mem_cov4 mem_cov5 mem_cov6 mem_cov7 mem_cov8 mem_cov9 mem_cov10
+	vcover merge mem_cov mem_cov1 mem_cov2 mem_cov3 mem_cov4 mem_cov5 mem_cov6 mem_cov7 mem_cov8 mem_cov9 mem_cov10 mem_cov11
 	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov
 
-regress_Questa: clean_Questa run_test_Questa run_test1_Questa run_test2_Questa run_test3_Questa run_test4_Questa run_test5_Questa run_test6_Questa run_test7_Questa run_test8_Questa run_test9_Questa report_Questa 
+regress_Questa: clean_Questa run_test_Questa run_test1_Questa run_test2_Questa run_test3_Questa run_test4_Questa run_test5_Questa run_test6_Questa run_test7_Questa run_test8_Questa run_test9_Questa run_test10_Questa report_Questa 
 
 cov_Questa:
 	firefox covhtmlreport/index.html&

@@ -461,6 +461,64 @@ task apb_seq_input_ext2::body;
   end
 endtask
 
+class apb_seq_input extends apb_sequence_base;
+  `uvm_object_utils(apb_seq_input)
+  extern function new(string name = "apb_seq_input");
+  extern task body;
+endclass
+
+function apb_seq_input::new(string name = "apb_seq_input");
+  super.new(name);
+endfunction
+
+task apb_seq_input::body;
+  `uvm_info(get_type_name, "In the body of apb_seq_input", UVM_LOW)
+  super.body();
+  begin
+    req = apb_xtn::type_id::create("req");
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_OE;
+      PWDATA == e_cfg.rgpio_oe;
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OE as all_outputs", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+    ////////////////////////////////////////////////////////////////////////
+
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_INTE;
+      PWDATA == 32'h0000_0000;  //NOTE: Disabling interrupt
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+
+    ////////////////////////////////////////////////////////////////////////
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_ECLK;
+      PWDATA == 32'h0000_0000;
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+  end
+endtask
+
 //NOTE: bidirectional
 class apb_seq_bidir extends apb_sequence_base;
   `uvm_object_utils(apb_seq_bidir)
@@ -682,3 +740,206 @@ task ctrl_reset_seq::body;
     finish_item(req);
   end
 endtask
+
+//NOTE: eclk with nec = 0 and ptrig= 1
+//posedge eclk and posedge rgpio_in
+class apb_seq_input_ext1_int1 extends apb_sequence_base;
+  `uvm_object_utils(apb_seq_input_ext1_int1)
+  extern function new(string name = "apb_seq_input_ext1_int1");
+  extern task body;
+endclass
+
+function apb_seq_input_ext1_int1::new(string name = "apb_seq_input_ext1_int1");
+  super.new(name);
+endfunction
+
+task apb_seq_input_ext1_int1::body;
+  `uvm_info(get_type_name, "In the body of apb_seq_input_ext1_int1", UVM_LOW)
+  super.body();
+  begin
+    req = apb_xtn::type_id::create("req");
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_OE;
+      PWDATA == e_cfg.rgpio_oe;
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OE as all_outputs", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+    ////////////////////////////////////////////////////////////////////////
+
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_INTE;
+      PWDATA == 32'hFFFF_FFFF;  //NOTE: Enabling all the interrupts
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+
+    ////////////////////////////////////////////////////////////////////////
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_ECLK;
+      PWDATA == 32'hFFFF_FFFF;
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+
+    ////////////////////////////////////////////////////////////////////////
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_NEC;
+      PWDATA == 32'h0000_0000;  //NOTE: posedge eclk sample
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+    ////////////////////////////////////////////////////////////////////////
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_PTRIG;
+      PWDATA == 32'hFFFF_FFFF;  //NOTE: posedge trigger
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+    ////////////////////////////////////////////////////////////////////////
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_CTRL;
+      PWDATA == 2'b01;  //NOTE: Enabling interrupt from ctrl
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+  end
+endtask
+
+
+//NOTE: eclk with nec = 1 and ptrig= 1
+//posedge eclk and posedge rgpio_in
+class apb_seq_input_ext2_int1 extends apb_sequence_base;
+  `uvm_object_utils(apb_seq_input_ext2_int1)
+  extern function new(string name = "apb_seq_input_ext2_int1");
+  extern task body;
+endclass
+
+function apb_seq_input_ext2_int1::new(string name = "apb_seq_input_ext2_int1");
+  super.new(name);
+endfunction
+
+task apb_seq_input_ext2_int1::body;
+  `uvm_info(get_type_name, "In the body of apb_seq_input_ext2_int1", UVM_LOW)
+  super.body();
+  begin
+    req = apb_xtn::type_id::create("req");
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_OE;
+      PWDATA == e_cfg.rgpio_oe;
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OE as all_outputs", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+    ////////////////////////////////////////////////////////////////////////
+
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_INTE;
+      PWDATA == 32'hFFFF_FFFF;  //NOTE: Enabling all the interrupts
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+
+    ////////////////////////////////////////////////////////////////////////
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_ECLK;
+      PWDATA == 32'hFFFF_FFFF;
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+
+    ////////////////////////////////////////////////////////////////////////
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_NEC;
+      PWDATA == 32'hFFFF_FFFF;  //NOTE: negedge eclk sample
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+    ////////////////////////////////////////////////////////////////////////
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_PTRIG;
+      PWDATA == 32'hFFFF_FFFF;  //NOTE: posedge trigger
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+    ////////////////////////////////////////////////////////////////////////
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_CTRL;
+      PWDATA == 2'b01;  //NOTE: Enabling interrupt from ctrl
+      PWRITE == 1'b1;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OUT to reflect in io_pad", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+
+  end
+endtask
+
+
