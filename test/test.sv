@@ -14,6 +14,8 @@ class gpio_test_base extends uvm_test;
 
   bit [31:0] rgpio_oe;
 
+  gpio_reg_block reg_block_h;
+
   virtual_seqs_base vseqs_base;
   gpio_output_vseq out_vseqh;
   gpio_output_aux_vseq out_aux_vseqh;
@@ -27,6 +29,19 @@ class gpio_test_base extends uvm_test;
   gpio_input_ext2_int1_vseq in_ext2_int1_vseqh;
   gpio_input_ext1_int2_vseq in_ext1_int2_vseqh;
   gpio_input_ext2_int2_vseq in_ext2_int2_vseqh;
+
+  bit is_out;
+  bit is_out_aux;
+  bit is_in_int1;
+  bit is_in_int2;
+  bit is_in_ext1;
+  bit is_in_ext2;
+  bit is_bidir;
+  bit is_in;
+  bit is_in_ext1_int1;
+  bit is_in_ext2_int1;
+  bit is_in_ext1_int2;
+  bit is_in_ext2_int2;
 
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
@@ -44,6 +59,9 @@ function void gpio_test_base::gpio_config;
   aux_cfg = aux_agent_config::type_id::create("aux_cfg");
   io_cfg  = io_agent_config::type_id::create("io_cfg");
 
+  reg_block_h = gpio_reg_block::type_id::create("reg_block_h",this);
+  reg_block_h.build;
+
   //NOTE: getting vif from top and setting it.
   if (!uvm_config_db#(virtual interface_apb)::get(this, "", "vif_apb", apb_cfg.vif))
     `uvm_fatal(get_type_name, "failed to get vif_apb in test from top")
@@ -60,6 +78,21 @@ function void gpio_test_base::gpio_config;
   e_cfg.apb_cfg = apb_cfg;
   e_cfg.aux_cfg = aux_cfg;
   e_cfg.io_cfg = io_cfg;
+  e_cfg.reg_block_h = reg_block_h;
+	
+   e_cfg.is_out = is_out;
+   e_cfg.is_out_aux = is_out_aux;
+   e_cfg.is_in_int1 = is_in_int1;
+   e_cfg.is_in_int2 = is_in_int2;
+   e_cfg.is_in_ext1 = is_in_ext1;
+   e_cfg.is_in_ext2 = is_in_ext2;
+   e_cfg.is_bidir = is_bidir;
+   e_cfg.is_in = is_in;
+   e_cfg.is_in_ext1_int1 = is_in_ext1_int1;
+   e_cfg.is_in_ext2_int1 = is_in_ext2_int2;
+   e_cfg.is_in_ext1_int2 = is_in_ext1_int2;
+   e_cfg.is_in_ext2_int2 = is_in_ext2_int2;
+
 
 endfunction
 
@@ -112,6 +145,7 @@ endfunction
 function void gpio_test_output::build_phase(uvm_phase phase);
   //NOTE: making every pin act as output
   rgpio_oe = 32'hffff_ffff;
+  is_out = 1;
   super.build_phase(phase);
 endfunction
 

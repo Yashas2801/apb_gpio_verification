@@ -59,4 +59,10 @@ function void gpio_env::connect_phase(uvm_phase phase);
   vseqrh.apb_seqrh = apb_agth.seqrh;
   vseqrh.aux_seqrh = aux_agth.seqrh;
   vseqrh.io_seqrh  = io_agth.seqrh;
+
+  apb_agth.monh.ana_port.connect(sb.apb_fifo.analysis_export);
+  io_agth.monh.ana_port.connect(sb.io_fifo.analysis_export);
+  aux_agth.monh.ana_port.connect(sb.aux_fifo.analysis_export);
+
 endfunction
+

@@ -217,7 +217,7 @@ task io_seq_set::body;
     //NOTE: io_pad is not valid since io_interface drives 'hz because of
     //io_dir
     assert (req.randomize() with {
-      io_pad == 32'hffff_ffff;
+      io_pad == 32'hFFFF_FFFF;
       io_dir == e_cfg.rgpio_oe;
     });
     `uvm_info(get_type_name, "driving 'hz since every pin is acting as output", UVM_LOW)
