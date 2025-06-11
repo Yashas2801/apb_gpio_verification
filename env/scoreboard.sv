@@ -28,9 +28,11 @@ class scoreboard extends uvm_scoreboard;
 	env_config e_cfg;
 
 	int out_seq_pass;
-	int in_seq_pass;
 	int out_seq_error;
+	int in_seq_pass;
 	int in_seq_error;
+	int aux_seq_pass;
+	int aux_seq_error;
 
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
@@ -55,45 +57,43 @@ endfunction
 
 task scoreboard::sample_reg;
 	this.reg_block_h.RGPIO_IN.read(status,data1,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
-	rgpio_in = data1;
+	rgpio_in = data1[31:0];
 	this.reg_block_h.RGPIO_OUT.read(status,data2,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
-	rgpio_out = data2;
+	rgpio_out = data2[31:0];
 	this.reg_block_h.RGPIO_OE.read(status,data3,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
-	rgpio_in = data3;
+	rgpio_oe = data3[31:0];
 	this.reg_block_h.RGPIO_INTE.read(status,data4,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
-	rgpio_in = data4;
+	rgpio_inte = data4[31:0];
 	this.reg_block_h.RGPIO_PTRIG.read(status,data5,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
-	rgpio_in = data5;
+	rgpio_ptrig = data5[31:0];
 	this.reg_block_h.RGPIO_AUX.read(status,data6,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
-	rgpio_in = data6;
+	rgpio_aux = data6[31:0];
 	this.reg_block_h.RGPIO_CTRL.read(status,data7,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
-	rgpio_in = data7;
+	rgpio_ctrl = data7[1:0];
 	this.reg_block_h.RGPIO_INTS.read(status,data8,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
-	rgpio_in = data8;
+	rgpio_ints = data8[31:0];
 	this.reg_block_h.RGPIO_ECLK.read(status,data9,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
-	rgpio_in = data9;
+	rgpio_eclk = data9[31:0];
 	this.reg_block_h.RGPIO_NEC.read(status,data10,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
-	rgpio_in = data10;
+	rgpio_nec = data10[31:0];
 
 endtask
 
 task scoreboard::run_phase(uvm_phase phase);
-fork
  forever begin
-    apb_fifo.get(apb_h); 
-    io_fifo.get(io_h); 
-    aux_fifo.get(aux_h); 
-  //`uvm_info("APB_IO_XTN", $sformatf("printing from sb \n , %s", io_h.sprint), UVM_LOW)
- end
-join
+	fork
+    		apb_fifo.get(apb_h); 
+    		io_fifo.get(io_h); 
+    		aux_fifo.get(aux_h); 
+	join
 	sample_reg; 
-	`uvm_info("RGPIO_OUT_SAMPLED",$sformatf("rgpio_out = %0h",rgpio_out),UVM_LOW)
+ end
 endtask
 
 function void scoreboard::check_phase(uvm_phase phase);
+/////////////////////////////////GPIO as ouput//////////////////////////////////////////
+	if(e_cfg.is_out)begin
 	`uvm_info("RGPIO_OUT_SAMPLED",$sformatf("rgpio_out = %0h",rgpio_out),UVM_LOW)
-	`uvm_info(get_type_name,$sformatf("e_cfg.is_out= %0b",e_cfg.is_out),UVM_LOW)
-	if(1)begin
 	`uvm_info(get_type_name,"Final Check for gpio as output",UVM_LOW)
 		for(int i = 0;i<32;i++)begin
 			if(io_h.io_pad[i] == rgpio_out[i])begin
@@ -103,13 +103,89 @@ function void scoreboard::check_phase(uvm_phase phase);
 				out_seq_error++;
 			end
 		end	
-	end
 	if(out_seq_pass > 0)begin
 	`uvm_info(get_type_name,"gpio as output is verified",UVM_LOW)
 	`uvm_info(get_type_name, $sformatf("out_seq_pass = %0d",out_seq_pass),UVM_LOW)
 	end
-	else
+	else begin
 	`uvm_info(get_type_name,"gpio as output is wrong",UVM_LOW)
 	`uvm_info(get_type_name, $sformatf("out_seq_error = %0d",out_seq_error),UVM_LOW)
+         end
+	end
+/////////////////////////////////GPIO as ouput_aux//////////////////////////////////////////
+	if(e_cfg.is_out_aux)begin
+	`uvm_info("RGPIO_AUX_SAMPLED",$sformatf("rgpio_aux = %0h",rgpio_aux),UVM_LOW)
+	`uvm_info(get_type_name,"Final Check for gpio as output_aux",UVM_LOW)
+		for(int i = 0;i<32;i++)begin
+			if(io_h.io_pad[i] == aux_h.aux_in[i])begin
+				aux_seq_pass++;	
+			end
+			else begin
+				aux_seq_error++;
+			end
+		end	
+	if(aux_seq_pass > 0)begin
+	`uvm_info(get_type_name,"gpio as output_aux is verified",UVM_LOW)
+	`uvm_info(get_type_name, $sformatf("aux_seq_pass = %0d",aux_seq_pass),UVM_LOW)
+	end
+	else begin
+	`uvm_info(get_type_name,"gpio as output_aux is failed",UVM_LOW)
+	`uvm_info(get_type_name, $sformatf("aux_seq_error = %0d",aux_seq_error),UVM_LOW)
+         end
+	end
 
-endfunction
+/////////////////////////////////GPIO as input//////////////////////////////////////////
+	if(e_cfg.is_in)begin
+	`uvm_info("as_input",$sformatf("rgpio_oe = %0h",rgpio_oe),UVM_LOW)
+	`uvm_info("as_input",$sformatf("rgpio_eclk = %0h",rgpio_eclk),UVM_LOW)
+	`uvm_info("as_input",$sformatf("rgpio_inte = %0h",rgpio_inte),UVM_LOW)
+	`uvm_info(get_type_name,"Final Check for gpio as input",UVM_LOW)
+		for(int i = 0;i<32;i++)begin
+			if(rgpio_in[i] == io_h.io_pad[i])begin
+				in_seq_pass++;	
+			end
+			else begin
+				in_seq_error++;
+			end
+		end	
+	if(in_seq_pass > 0)begin
+	`uvm_info(get_type_name,"gpio as input is verified",UVM_LOW)
+	`uvm_info(get_type_name, $sformatf("in_seq_pass = %0d",in_seq_pass),UVM_LOW)
+	end
+	else begin
+	`uvm_info(get_type_name,"gpio as input is failed",UVM_LOW)
+	`uvm_info(get_type_name, $sformatf("in_seq_error = %0d",in_seq_error),UVM_LOW)
+         end
+	end
+
+/////////////////////////////////GPIO as input_interrupt_ptrig1//////////////////////////////////////////
+
+	bit [31:0]expected_ints;
+	bit expected_interrupt;
+
+	if(e_cfg.is_in_int1)begin
+	`uvm_info("as_input_int1",$sformatf("rgpio_oe = %0h",rgpio_oe),UVM_LOW)
+	`uvm_info("as_input_int1",$sformatf("rgpio_eclk = %0h",rgpio_eclk),UVM_LOW)
+	`uvm_info("as_input_int1",$sformatf("rgpio_inte = %0h",rgpio_inte),UVM_LOW)
+	`uvm_info(get_type_name,"Final Check for gpio as input",UVM_LOW)
+		for(int i = 0;i<32;i++)begin
+			if(rgpio_inte[i] && rgpio_ptrig[i])begin
+				expected_ints[i] = 1;
+			end
+		end	
+		expected_interrupt = |expected_ints;
+		if(expected_interrupt)begin
+			if(apb_h.IRQ) `uvm_info("as_input_int1","IRQ asserted properly",UVM_LOW)
+			else `uvm_info("as_input_int1","IRQ not asserted", UVM_LOW)
+		end
+	if(in_seq_pass > 0)begin
+	`uvm_info(get_type_name,"gpio as input is verified",UVM_LOW)
+	`uvm_info(get_type_name, $sformatf("in_seq_pass = %0d",in_seq_pass),UVM_LOW)
+	end
+	else begin
+	`uvm_info(get_type_name,"gpio as input is failed",UVM_LOW)
+	`uvm_info(get_type_name, $sformatf("in_seq_error = %0d",in_seq_error),UVM_LOW)
+         end
+	end
+
+	endfunction

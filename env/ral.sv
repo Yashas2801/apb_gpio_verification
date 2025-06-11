@@ -12,7 +12,7 @@ endfunction
 
 function void reg_RGPIO_IN::build();
   RGPIO_IN = uvm_reg_field::type_id::create("RGPIO_IN");
-  RGPIO_IN.configure(this, 32, 0, "RO", 32'h0, 1, 1, 1, 0);
+  RGPIO_IN.configure(this, 32, 0, "RO", 1, 32'h0, 1, 1, 0);
 endfunction
 
 class reg_RGPIO_OUT extends uvm_reg;
@@ -29,7 +29,7 @@ endfunction
 
 function void reg_RGPIO_OUT::build();
   RGPIO_OUT = uvm_reg_field::type_id::create("RGPIO_OUT");
-  RGPIO_OUT.configure(this, 32, 0, "RW", 32'h0, 1, 1, 1, 0);
+  RGPIO_OUT.configure(this, 32, 0, "RW", 1, 32'h0, 1, 1, 0);
 endfunction
 
 class reg_RGPIO_OE extends uvm_reg;
@@ -46,7 +46,7 @@ endfunction
 
 function void reg_RGPIO_OE::build();
   RGPIO_OE = uvm_reg_field::type_id::create("RGPIO_OE");
-  RGPIO_OE.configure(this, 32, 0, "RW", 32'h0, 1, 1, 1, 0);
+  RGPIO_OE.configure(this, 32, 0, "RW", 1, 32'h0, 1, 1, 0);
 endfunction
 
 class reg_RGPIO_INTE extends uvm_reg;
@@ -63,7 +63,7 @@ endfunction
 
 function void reg_RGPIO_INTE::build();
   RGPIO_INTE = uvm_reg_field::type_id::create("RGPIO_INTE");
-  RGPIO_INTE.configure(this, 32, 0, "RW", 32'h0, 1, 1, 1, 0);
+  RGPIO_INTE.configure(this, 32, 0, "RW", 1, 32'h0, 1, 1, 0);
 endfunction
 
 class reg_RGPIO_PTRIG extends uvm_reg;
@@ -80,7 +80,7 @@ endfunction
 
 function void reg_RGPIO_PTRIG::build();
   RGPIO_PTRIG = uvm_reg_field::type_id::create("RGPIO_PTRIG");
-  RGPIO_PTRIG.configure(this, 32, 0, "RW", 32'h0, 1, 1, 1, 0);
+  RGPIO_PTRIG.configure(this, 32, 0, "RW", 1, 32'h0, 1, 1, 0);
 endfunction
 
 class reg_RGPIO_AUX extends uvm_reg;
@@ -97,7 +97,7 @@ endfunction
 
 function void reg_RGPIO_AUX::build();
   RGPIO_AUX = uvm_reg_field::type_id::create("RGPIO_AUX");
-  RGPIO_AUX.configure(this, 32, 0, "RW", 32'h0, 1, 1, 1, 0);
+  RGPIO_AUX.configure(this, 32, 0, "RW", 1, 32'h0, 1, 1, 0);
 endfunction
 
 class reg_RGPIO_CTRL extends uvm_reg;
@@ -114,7 +114,7 @@ endfunction
 
 function void reg_RGPIO_CTRL::build();
   RGPIO_CTRL = uvm_reg_field::type_id::create("RGPIO_CTRL");
-  RGPIO_CTRL.configure(this, 2, 0, "RW", 2'b0, 1, 1, 1, 0);
+  RGPIO_CTRL.configure(this, 2, 0, "RW", 1, 2'b0, 1, 1, 0);
 endfunction
 
 class reg_RGPIO_INTS extends uvm_reg;
@@ -131,7 +131,7 @@ endfunction
 
 function void reg_RGPIO_INTS::build();
   RGPIO_INTS = uvm_reg_field::type_id::create("RGPIO_INTS");
-  RGPIO_INTS.configure(this, 32, 0, "RW", 32'h0, 1, 1, 1, 0);
+  RGPIO_INTS.configure(this, 32, 0, "RW", 1, 32'h0, 1, 1, 0);
 endfunction
 
 class reg_RGPIO_ECLK extends uvm_reg;
@@ -148,7 +148,7 @@ endfunction
 
 function void reg_RGPIO_ECLK::build();
   RGPIO_ECLK = uvm_reg_field::type_id::create("RGPIO_ECLK");
-  RGPIO_ECLK.configure(this, 32, 0, "RW", 32'h0, 1, 1, 1, 0);
+  RGPIO_ECLK.configure(this, 32, 0, "RW", 1, 32'h0, 1, 1, 0);
 endfunction
 
 class reg_RGPIO_NEC extends uvm_reg;
@@ -165,5 +165,5 @@ endfunction
 
 function void reg_RGPIO_NEC::build();
   RGPIO_NEC = uvm_reg_field::type_id::create("RGPIO_NEC");
-  RGPIO_NEC.configure(this, 32, 0, "RW", 32'h0, 1, 1, 1, 0);
+  RGPIO_NEC.configure(this, 32, 0, "RW", 1, 32'h0, 1, 1, 0);
 endfunction

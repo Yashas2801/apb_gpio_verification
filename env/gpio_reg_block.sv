@@ -77,16 +77,16 @@ function void gpio_reg_block::build();
   RGPIO_NEC.build();
   RGPIO_NEC.add_hdl_path_slice("rgpio_nec", 0, 32);
 
-  default_map.add_reg(RGPIO_IN, `GPIO_RGPIO_IN, "RO");
-  default_map.add_reg(RGPIO_INTE, `GPIO_RGPIO_INTE, "RW");
-  default_map.add_reg(RGPIO_OUT, `GPIO_RGPIO_OUT, "RW");
-  default_map.add_reg(RGPIO_OE, `GPIO_RGPIO_OE, "RW");
-  default_map.add_reg(RGPIO_NEC, `GPIO_RGPIO_NEC, "RW");
-  default_map.add_reg(RGPIO_ECLK, `GPIO_RGPIO_ECLK, "RW");
-  default_map.add_reg(RGPIO_INTS, `GPIO_RGPIO_INTS, "RW");
-  default_map.add_reg(RGPIO_CTRL, `GPIO_RGPIO_CTRL, "RW");
-  default_map.add_reg(RGPIO_AUX, `GPIO_RGPIO_AUX, "RW");
-  default_map.add_reg(RGPIO_PTRIG, `GPIO_RGPIO_PTRIG, "RW");
+  GPIO_REG_MAP.add_reg(RGPIO_IN, `GPIO_RGPIO_IN, "RO");
+  GPIO_REG_MAP.add_reg(RGPIO_INTE, `GPIO_RGPIO_INTE, "RW");
+  GPIO_REG_MAP.add_reg(RGPIO_OUT, `GPIO_RGPIO_OUT, "RW");
+  GPIO_REG_MAP.add_reg(RGPIO_OE, `GPIO_RGPIO_OE, "RW");
+  GPIO_REG_MAP.add_reg(RGPIO_NEC, `GPIO_RGPIO_NEC, "RW");
+  GPIO_REG_MAP.add_reg(RGPIO_ECLK, `GPIO_RGPIO_ECLK, "RW");
+  GPIO_REG_MAP.add_reg(RGPIO_INTS, `GPIO_RGPIO_INTS, "RW");
+  GPIO_REG_MAP.add_reg(RGPIO_CTRL, `GPIO_RGPIO_CTRL, "RW");
+  GPIO_REG_MAP.add_reg(RGPIO_AUX, `GPIO_RGPIO_AUX, "RW");
+  GPIO_REG_MAP.add_reg(RGPIO_PTRIG, `GPIO_RGPIO_PTRIG, "RW");
 
   add_hdl_path("top.i1.reg_instance", "RTL");
   //NOTE: add_hdl_path(path, kind="RTL"): Maps a register's HDL path (string) in the DUT for backdoor access.

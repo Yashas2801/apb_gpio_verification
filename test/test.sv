@@ -59,7 +59,7 @@ function void gpio_test_base::gpio_config;
   aux_cfg = aux_agent_config::type_id::create("aux_cfg");
   io_cfg  = io_agent_config::type_id::create("io_cfg");
 
-  reg_block_h = gpio_reg_block::type_id::create("reg_block_h",this);
+  reg_block_h = gpio_reg_block::type_id::create("reg_block_h");
   reg_block_h.build;
 
   //NOTE: getting vif from top and setting it.
@@ -170,6 +170,7 @@ endfunction
 
 function void gpio_test_output_aux::build_phase(uvm_phase phase);
   //NOTE: making every pin act as output
+  is_out_aux = 1;
   rgpio_oe = 32'hffff_ffff;
   super.build_phase(phase);
 endfunction
@@ -196,6 +197,7 @@ endfunction
 function void gpio_test_input_int1::build_phase(uvm_phase phase);
   //NOTE: making every pin act as input
   rgpio_oe = 32'h0000_0000;
+  is_in_int1 = 1;
   super.build_phase(phase);
 endfunction
 
@@ -322,6 +324,7 @@ endfunction
 
 function void gpio_test_input::build_phase(uvm_phase phase);
   //NOTE: making every pin act as input
+  is_in = 1;
   rgpio_oe = 32'h0000_0000;
   super.build_phase(phase);
 endfunction
