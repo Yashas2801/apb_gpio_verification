@@ -17,7 +17,7 @@ class env_config extends uvm_object;
     super.new(name);
   endfunction
 
-  bit is_out = 1;
+  bit is_out ;
   bit is_out_aux;
   bit is_in_int1;
   bit is_in_int2;

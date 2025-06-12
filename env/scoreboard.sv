@@ -34,13 +34,33 @@ class scoreboard extends uvm_scoreboard;
 	int aux_seq_pass;
 	int aux_seq_error;
 
+///////////////////ref_model_signals////////////////////////////////////
+  logic [31:0]extc_in;
+  logic [31:0]in_mux;
+  logic [31:0]rgpio_ints_e;
+
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
 //  extern task compare(apb_xtn apb_h, io_xtn io_h, aux_xtn aux_h);
   extern function void check_phase(uvm_phase phase);
   extern task run_phase(uvm_phase phase);
   extern task sample_reg;
+  extern task sample_signals;
 endclass
+
+task scoreboard::sample_signals;
+	logic [31:0] io_dir = io_h.io_dir;	
+	logic [31:0] in_pad_i;
+	`uvm_info(get_type_name, $sformatf("io_dir = %0h", io_dir),UVM_LOW)	
+	for(int i = 0; i< 32; i++)begin
+		if(io_dir[i]) in_pad_i[i] = io_h.io_pad[i];
+	end
+	extc_in = (~rgpio_nec & in_pad_i)|(rgpio_nec & in_pad_i);
+	in_mux = (rgpio_eclk & extc_in )|(~rgpio_eclk & in_pad_i);
+	rgpio_ints_e = (rgpio_ints_e | (((in_mux ^ rgpio_in)& ~(in_mux ^ rgpio_ptrig)) & rgpio_inte));
+	`uvm_info(get_type_name,$sformatf("extc_in = %0h, in_mux = %0h, ints_i = %0h, prtig = %h,inte = %h",extc_in,in_mux,rgpio_ints_e,rgpio_ptrig,rgpio_inte),UVM_LOW)
+
+endtask
 
 function scoreboard::new(string name, uvm_component parent);
   super.new(name, parent);
@@ -77,6 +97,9 @@ task scoreboard::sample_reg;
 	this.reg_block_h.RGPIO_NEC.read(status,data10,.path(UVM_BACKDOOR),.map(reg_block_h.GPIO_REG_MAP));
 	rgpio_nec = data10[31:0];
 
+	rgpio_ints_e = rgpio_ints;	
+	`uvm_info(get_type_name,$sformatf("Ints sampled = %0h",rgpio_ints),UVM_LOW)
+	sample_signals;
 endtask
 
 task scoreboard::run_phase(uvm_phase phase);
@@ -159,33 +182,10 @@ function void scoreboard::check_phase(uvm_phase phase);
 	end
 
 /////////////////////////////////GPIO as input_interrupt_ptrig1//////////////////////////////////////////
-
-	bit [31:0]expected_ints;
-	bit expected_interrupt;
-
 	if(e_cfg.is_in_int1)begin
 	`uvm_info("as_input_int1",$sformatf("rgpio_oe = %0h",rgpio_oe),UVM_LOW)
 	`uvm_info("as_input_int1",$sformatf("rgpio_eclk = %0h",rgpio_eclk),UVM_LOW)
 	`uvm_info("as_input_int1",$sformatf("rgpio_inte = %0h",rgpio_inte),UVM_LOW)
-	`uvm_info(get_type_name,"Final Check for gpio as input",UVM_LOW)
-		for(int i = 0;i<32;i++)begin
-			if(rgpio_inte[i] && rgpio_ptrig[i])begin
-				expected_ints[i] = 1;
-			end
-		end	
-		expected_interrupt = |expected_ints;
-		if(expected_interrupt)begin
-			if(apb_h.IRQ) `uvm_info("as_input_int1","IRQ asserted properly",UVM_LOW)
-			else `uvm_info("as_input_int1","IRQ not asserted", UVM_LOW)
-		end
-	if(in_seq_pass > 0)begin
-	`uvm_info(get_type_name,"gpio as input is verified",UVM_LOW)
-	`uvm_info(get_type_name, $sformatf("in_seq_pass = %0d",in_seq_pass),UVM_LOW)
+	`uvm_info(get_type_name,"Final Check for gpio as input_interrupt",UVM_LOW)
 	end
-	else begin
-	`uvm_info(get_type_name,"gpio as input is failed",UVM_LOW)
-	`uvm_info(get_type_name, $sformatf("in_seq_error = %0d",in_seq_error),UVM_LOW)
-         end
-	end
-
 	endfunction
