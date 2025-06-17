@@ -29,6 +29,7 @@ class gpio_test_base extends uvm_test;
   gpio_input_ext2_int1_vseq in_ext2_int1_vseqh;
   gpio_input_ext1_int2_vseq in_ext1_int2_vseqh;
   gpio_input_ext2_int2_vseq in_ext2_int2_vseqh;
+  gpio_input_int_clear_vseq in_int_clr_vseqh;
 
   bit is_out;
   bit is_out_aux;
@@ -42,6 +43,7 @@ class gpio_test_base extends uvm_test;
   bit is_in_ext2_int1;
   bit is_in_ext1_int2;
   bit is_in_ext2_int2;
+  bit is_in_int_clr;
 
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
@@ -57,7 +59,7 @@ endfunction
 function void gpio_test_base::gpio_config;
   apb_cfg = apb_agent_config::type_id::create("apb_cfg");
   aux_cfg = aux_agent_config::type_id::create("aux_cfg");
-  io_cfg  = io_agent_config::type_id::create("io_cfg");
+  io_cfg = io_agent_config::type_id::create("io_cfg");
 
   reg_block_h = gpio_reg_block::type_id::create("reg_block_h");
   reg_block_h.build;
@@ -79,19 +81,21 @@ function void gpio_test_base::gpio_config;
   e_cfg.aux_cfg = aux_cfg;
   e_cfg.io_cfg = io_cfg;
   e_cfg.reg_block_h = reg_block_h;
-	
-   e_cfg.is_out = is_out;
-   e_cfg.is_out_aux = is_out_aux;
-   e_cfg.is_in_int1 = is_in_int1;
-   e_cfg.is_in_int2 = is_in_int2;
-   e_cfg.is_in_ext1 = is_in_ext1;
-   e_cfg.is_in_ext2 = is_in_ext2;
-   e_cfg.is_bidir = is_bidir;
-   e_cfg.is_in = is_in;
-   e_cfg.is_in_ext1_int1 = is_in_ext1_int1;
-   e_cfg.is_in_ext2_int1 = is_in_ext2_int2;
-   e_cfg.is_in_ext1_int2 = is_in_ext1_int2;
-   e_cfg.is_in_ext2_int2 = is_in_ext2_int2;
+
+  e_cfg.is_out = is_out;
+  e_cfg.is_out_aux = is_out_aux;
+  e_cfg.is_in_int1 = is_in_int1;
+  e_cfg.is_in_int2 = is_in_int2;
+  e_cfg.is_in_ext1 = is_in_ext1;
+  e_cfg.is_in_ext2 = is_in_ext2;
+  e_cfg.is_bidir = is_bidir;
+  e_cfg.is_in = is_in;
+  e_cfg.is_in_ext1_int1 = is_in_ext1_int1;
+  e_cfg.is_in_ext2_int1 = is_in_ext2_int2;
+  e_cfg.is_in_ext1_int2 = is_in_ext1_int2;
+  e_cfg.is_in_ext2_int2 = is_in_ext2_int2;
+  e_cfg.is_in_int_clr = is_in_int_clr;
+
 
 
 endfunction
@@ -145,7 +149,7 @@ endfunction
 function void gpio_test_output::build_phase(uvm_phase phase);
   //NOTE: making every pin act as output
   rgpio_oe = 32'hffff_ffff;
-  is_out = 1;
+  is_out   = 1;
   super.build_phase(phase);
 endfunction
 
@@ -171,7 +175,7 @@ endfunction
 function void gpio_test_output_aux::build_phase(uvm_phase phase);
   //NOTE: making every pin act as output
   is_out_aux = 1;
-  rgpio_oe = 32'hffff_ffff;
+  rgpio_oe   = 32'hffff_ffff;
   super.build_phase(phase);
 endfunction
 
@@ -196,7 +200,7 @@ endfunction
 
 function void gpio_test_input_int1::build_phase(uvm_phase phase);
   //NOTE: making every pin act as input
-  rgpio_oe = 32'h0000_0000;
+  rgpio_oe   = 32'h0000_0000;
   is_in_int1 = 1;
   super.build_phase(phase);
 endfunction
@@ -222,7 +226,8 @@ endfunction
 
 function void gpio_test_input_int2::build_phase(uvm_phase phase);
   //NOTE: making every pin act as input
-  rgpio_oe = 32'h0000_0000;
+  rgpio_oe   = 32'h0000_0000;
+  is_in_int2 = 1;
   super.build_phase(phase);
 endfunction
 
@@ -247,7 +252,8 @@ endfunction
 
 function void gpio_test_input_ext1::build_phase(uvm_phase phase);
   //NOTE: making every pin act as input
-  rgpio_oe = 32'h0000_0000;
+  rgpio_oe   = 32'h0000_0000;
+  is_in_ext1 = 1;
   super.build_phase(phase);
 endfunction
 
@@ -272,7 +278,8 @@ endfunction
 
 function void gpio_test_input_ext2::build_phase(uvm_phase phase);
   //NOTE: making every pin act as input
-  rgpio_oe = 32'h0000_0000;
+  rgpio_oe   = 32'h0000_0000;
+  is_in_ext2 = 1;
   super.build_phase(phase);
 endfunction
 
@@ -351,6 +358,7 @@ endfunction
 function void gpio_test_input_ext1_int1::build_phase(uvm_phase phase);
   //NOTE: making every pin act as input
   rgpio_oe = 32'h0000_0000;
+  is_in_ext1_int1 = 1;
   super.build_phase(phase);
 endfunction
 
@@ -408,5 +416,30 @@ task gpio_test_input_ext2_int2::run_phase(uvm_phase phase);
   in_ext2_int2_vseqh = gpio_input_ext2_int2_vseq::type_id::create("in_ext2_int2_vseqh");
   phase.raise_objection(this);
   in_ext2_int2_vseqh.start(envh.vseqrh);
+  phase.drop_objection(this);
+endtask
+
+class gpio_test_input_int_clear extends gpio_test_base;
+  `uvm_component_utils(gpio_test_input_int_clear)
+
+  extern function new(string name, uvm_component parent);
+  extern function void build_phase(uvm_phase phase);
+  extern task run_phase(uvm_phase phase);
+endclass
+
+function gpio_test_input_int_clear::new(string name, uvm_component parent);
+  super.new(name, parent);
+endfunction
+
+function void gpio_test_input_int_clear::build_phase(uvm_phase phase);
+  //NOTE: making every pin act as input
+  rgpio_oe = 32'h0000_0000;
+  super.build_phase(phase);
+endfunction
+
+task gpio_test_input_int_clear::run_phase(uvm_phase phase);
+  in_int_clr_vseqh = gpio_input_int_clear_vseq::type_id::create("in_int_clr_vseqh");
+  phase.raise_objection(this);
+  in_int_clr_vseqh.start(envh.vseqrh);
   phase.drop_objection(this);
 endtask

@@ -20,6 +20,7 @@ VSIMBATCH10 = -c -do "log -r /*; coverage save -onexit mem_cov10; run -all; exit
 VSIMBATCH11 = -c -do "log -r /*; coverage save -onexit mem_cov11; run -all; exit"
 VSIMBATCH12 = -c -do "log -r /*; coverage save -onexit mem_cov12; run -all; exit"
 VSIMBATCH13 = -c -do "log -r /*; coverage save -onexit mem_cov13; run -all; exit"
+VSIMBATCH14 = -c -do "log -r /*; coverage save -onexit mem_cov14; run -all; exit"
 VERBOSITY = +UVM_VERBOSITY=UVM_MEDIUM
 
 # Help target
@@ -56,6 +57,7 @@ help:
 	@echo "  run_test10    : Run gpio_test_input_ext2_int1 test."
 	@echo "  run_test11    : Run gpio_test_input_ext1_int2 test."
 	@echo "  run_test12    : Run gpio_test_input_ext2_int2 test."
+	@echo "  run_test13    : Run gpio_test_input_int_clear test."
 	@echo ""
 	@echo "Waveform Viewing Targets:"
 	@echo "  view_wave1    : View waveform for gpio_test_base."
@@ -71,6 +73,7 @@ help:
 	@echo "  view_wave11   : View waveform for gpio_test_input_ext2_int1."
 	@echo "  view_wave12   : View waveform for gpio_test_input_ext1_int2."
 	@echo "  view_wave13   : View waveform for gpio_test_input_ext2_int2."
+	@echo "  view_wave14   : View waveform for gpio_test_input_int_clear."
 	@echo ""
 	@echo "Notes:"
 	@echo "- Simulator: Questa"
@@ -99,6 +102,7 @@ run_test9: run_test9_$(SIMULATOR)
 run_test10: run_test10_$(SIMULATOR)
 run_test11: run_test11_$(SIMULATOR)
 run_test12: run_test12_$(SIMULATOR)
+run_test13: run_test13_$(SIMULATOR)
 view_wave1: view_wave1_$(SIMULATOR)
 view_wave2: view_wave2_$(SIMULATOR)
 view_wave3: view_wave3_$(SIMULATOR)
@@ -112,6 +116,7 @@ view_wave10: view_wave10_$(SIMULATOR)
 view_wave11: view_wave11_$(SIMULATOR)
 view_wave12: view_wave12_$(SIMULATOR)
 view_wave13: view_wave13_$(SIMULATOR)
+view_wave14: view_wave14_$(SIMULATOR)
 regress: regress_$(SIMULATOR)
 report: report_$(SIMULATOR)
 cov: cov_$(SIMULATOR)
@@ -174,6 +179,9 @@ run_test12_Questa: sv_cmp
 	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH13) $(VERBOSITY) -wlf wave_file13.wlf -l test13.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext2_int2
 	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov13
 
+run_test13_Questa: sv_cmp
+	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH14) $(VERBOSITY) -wlf wave_file14.wlf -l test14.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_int_clear
+
 view_wave1_Questa:
 	vsim -view wave_file1.wlf
 
@@ -213,11 +221,14 @@ view_wave12_Questa:
 view_wave13_Questa:
 	vsim -view wave_file13.wlf
 
+view_wave14_Questa:
+	vsim -view wave_file14.wlf
+
 report_Questa:
-	vcover merge mem_cov mem_cov1 mem_cov2 mem_cov3 mem_cov4 mem_cov5 mem_cov6 mem_cov7 mem_cov8 mem_cov9 mem_cov10 mem_cov11 mem_cov12 mem_cov13
+	vcover merge mem_cov mem_cov1 mem_cov2 mem_cov3 mem_cov4 mem_cov5 mem_cov6 mem_cov7 mem_cov8 mem_cov9 mem_cov10 mem_cov11 mem_cov12 mem_cov13 mem_cov14
 	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov
 
-regress_Questa: clean_Questa run_test_Questa run_test1_Questa run_test2_Questa run_test3_Questa run_test4_Questa run_test5_Questa run_test6_Questa run_test7_Questa run_test8_Questa run_test9_Questa run_test10_Questa run_test11_Questa run_test12_Questa report_Questa
+regress_Questa: clean_Questa run_test_Questa run_test1_Questa run_test2_Questa run_test3_Questa run_test4_Questa run_test5_Questa run_test6_Questa run_test7_Questa run_test8_Questa run_test9_Questa run_test10_Questa run_test11_Questa run_test12_Questa run_test13_Questa report_Questa
 
 cov_Questa:
 	firefox covhtmlreport/index.html &

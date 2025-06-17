@@ -38,6 +38,7 @@ endfunction
 
 task apb_monitor::monitor();
   `uvm_info(get_type_name(), "monitor task invoked", UVM_LOW);
+  xtn.IRQ = vif.mon_cb.IRQ;
   while (!(vif.mon_cb.PSEL && !vif.mon_cb.PENABLE)) begin
     @(vif.mon_cb);
   end

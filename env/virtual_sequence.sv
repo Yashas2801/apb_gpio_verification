@@ -46,7 +46,8 @@ class virtual_seqs_base extends uvm_sequence #(uvm_sequence_item);
   //io_seq_output io_out_seqh;
   //apb_read apb_readh;
   //io_seq_input_ext1 io_in_ext1_seqh;
-
+  //NOTE:Interrupt posedge triggered and posedge eclk(Interrupt clear)
+  //
   //NOTE:Interrupt posedge triggered and posedge eclk
   apb_seq_input_ext1_int1 apb_in_ext1_int1_seqh;
   //io_seq_output io_out_seqh;
@@ -136,6 +137,35 @@ task gpio_output_aux_vseq::body;
   end
 endtask
 
+//NOTE: int1 is ptrig =1 , no external clk and clear interrupt(reset ints)
+class gpio_input_int_clear_vseq extends virtual_seqs_base;
+  `uvm_object_utils(gpio_input_int_clear_vseq)
+  extern function new(string name = "gpio_input_int_clear_vseq");
+  extern task body;
+endclass
+
+function gpio_input_int_clear_vseq::new(string name = "gpio_input_int_clear_vseq");
+  super.new(name);
+endfunction
+
+task gpio_input_int_clear_vseq::body;
+  super.body;
+  io_out_seqh = io_seq_output::type_id::create("io_out_seqh");
+  apb_in_int1_seqh = apb_seq_input_int1::type_id::create("apb_in_int1_seqh");
+  io_in_int1_seqh = io_seq_input_int1::type_id::create("io_in_int1_seqh");
+  apb_readh = apb_read::type_id::create("apb_readh");
+  ints_rst_seqh = ints_reset_seq::type_id::create("ints_rst_seqh");
+  begin
+    io_out_seqh.start(io_seqrh);
+    apb_in_int1_seqh.start(apb_seqrh);
+    io_in_int1_seqh.start(io_seqrh);
+    apb_readh.start(apb_seqrh);
+    ints_rst_seqh.start(apb_seqrh);
+    apb_readh.start(apb_seqrh);
+  end
+endtask
+
+
 //NOTE: int1 is ptrig =1 , no external clk
 class gpio_input_int1_vseq extends virtual_seqs_base;
   `uvm_object_utils(gpio_input_int1_vseq)
@@ -159,7 +189,7 @@ task gpio_input_int1_vseq::body;
     apb_in_int1_seqh.start(apb_seqrh);
     io_in_int1_seqh.start(io_seqrh);
     apb_readh.start(apb_seqrh);
-    ints_rst_seqh.start(apb_seqrh);
+    //ints_rst_seqh.start(apb_seqrh);
     apb_readh.start(apb_seqrh);
   end
 endtask
@@ -187,7 +217,7 @@ task gpio_input_int2_vseq::body;
     apb_in_int2_seqh.start(apb_seqrh);
     io_in_int2_seqh.start(io_seqrh);
     apb_readh.start(apb_seqrh);
-    ints_rst_seqh.start(apb_seqrh);
+    // ints_rst_seqh.start(apb_seqrh);
     apb_readh.start(apb_seqrh);
   end
 endtask
