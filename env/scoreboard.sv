@@ -206,7 +206,7 @@ function void scoreboard::check_phase(uvm_phase phase);
               `uvm_info("rgpio_nec", $sformatf("rgpio_nec[%0d] is set", i), UVM_LOW)
             end
             if (rgpio_ptrig[i]) begin
-              `uvm_info("rgpio_ptrig", $sformatf("rgpio_nec[%0d] is set", i), UVM_LOW)
+              `uvm_info("rgpio_ptrig", $sformatf("rgpio_ptrig[%0d] is set", i), UVM_LOW)
             end
           end
         end
@@ -221,6 +221,14 @@ function void scoreboard::check_phase(uvm_phase phase);
             `uvm_info("In_int1_verified", "Interrupt verified @ ptrig == 1", UVM_LOW)
           if (e_cfg.is_in_int2)
             `uvm_info("In_int2_verified", "Interrupt verified @ ptrig == 0", UVM_LOW)
+	  if (e_cfg.is_in_ext1_int1)
+            `uvm_info("In_ext1_int1_verified", "Interrupt verified @ ptrig == 1 nec == 0", UVM_LOW)
+	  if (e_cfg.is_in_ext2_int1)
+            `uvm_info("In_ext2_int1_verified", "Interrupt verified @ ptrig == 1 nec == 1", UVM_LOW)
+	  if (e_cfg.is_in_ext1_int2)
+            `uvm_info("In_ext1_int2_verified", "Interrupt verified @ ptrig == 0 nec == 0", UVM_LOW)
+	  if (e_cfg.is_in_ext2_int2)
+            `uvm_info("In_ext1_int2_verified", "Interrupt verified @ ptrig == 0 nec == 1", UVM_LOW)
         end else begin
           `uvm_info(get_type_name, "IRQ not generated, Interrupt not working", UVM_LOW)
         end
