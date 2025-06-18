@@ -295,6 +295,34 @@ task gpio_bidir_vseq::body;
     apb_bidir_seqh.start(apb_seqrh);
     io_bidir_seqh.start(io_seqrh);
     apb_readh.start(apb_seqrh);
+    //  ctrl_reset_seqh.start(apb_seqrh);
+    // apb_readh.start(apb_seqrh);
+  end
+endtask
+
+//NOTE: bidir with interrupt reset ctrl[inte] ==0
+class gpio_bidir_clear_vseq extends virtual_seqs_base;
+  `uvm_object_utils(gpio_bidir_clear_vseq)
+  extern function new(string name = "gpio_bidir_clear_vseq");
+  extern task body;
+endclass
+
+function gpio_bidir_clear_vseq::new(string name = "gpio_bidir_clear_vseq");
+  super.new(name);
+endfunction
+
+task gpio_bidir_clear_vseq::body;
+  super.body;
+  io_out_seqh = io_seq_output::type_id::create("io_out_seqh");
+  apb_bidir_seqh = apb_seq_bidir::type_id::create("apb_bidir_seqh");
+  io_bidir_seqh = io_seq_bidir::type_id::create("io_bidir_seqh");
+  apb_readh = apb_read::type_id::create("apb_readh");
+  ctrl_reset_seqh = ctrl_reset_seq::type_id::create("ctrl_reset_seqh");
+  begin
+    io_out_seqh.start(io_seqrh);
+    apb_bidir_seqh.start(apb_seqrh);
+    io_bidir_seqh.start(io_seqrh);
+    apb_readh.start(apb_seqrh);
     ctrl_reset_seqh.start(apb_seqrh);
     apb_readh.start(apb_seqrh);
   end

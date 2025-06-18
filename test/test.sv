@@ -30,6 +30,7 @@ class gpio_test_base extends uvm_test;
   gpio_input_ext1_int2_vseq in_ext1_int2_vseqh;
   gpio_input_ext2_int2_vseq in_ext2_int2_vseqh;
   gpio_input_int_clear_vseq in_int_clr_vseqh;
+  gpio_bidir_clear_vseq bidir_clr_vseqh;
 
   bit is_out;
   bit is_out_aux;
@@ -44,6 +45,7 @@ class gpio_test_base extends uvm_test;
   bit is_in_ext1_int2;
   bit is_in_ext2_int2;
   bit is_in_int_clr;
+  bit is_bidir_clr;
 
   extern function new(string name, uvm_component parent);
   extern function void build_phase(uvm_phase phase);
@@ -95,6 +97,7 @@ function void gpio_test_base::gpio_config;
   e_cfg.is_in_ext1_int2 = is_in_ext1_int2;
   e_cfg.is_in_ext2_int2 = is_in_ext2_int2;
   e_cfg.is_in_int_clr = is_in_int_clr;
+  e_cfg.is_bidir_clr = is_bidir_clr;
 
 
 
@@ -438,7 +441,7 @@ endfunction
 function void gpio_test_input_ext1_int2::build_phase(uvm_phase phase);
   //NOTE: making every pin act as input
   rgpio_oe = 32'h0000_0000;
-  is_in_ext1_int2 =1;
+  is_in_ext1_int2 = 1;
   super.build_phase(phase);
 endfunction
 
@@ -465,6 +468,7 @@ endfunction
 function void gpio_test_input_int_clear::build_phase(uvm_phase phase);
   //NOTE: making every pin act as input
   rgpio_oe = 32'h0000_0000;
+  is_in_int_clr = 1;
   super.build_phase(phase);
 endfunction
 
@@ -472,5 +476,31 @@ task gpio_test_input_int_clear::run_phase(uvm_phase phase);
   in_int_clr_vseqh = gpio_input_int_clear_vseq::type_id::create("in_int_clr_vseqh");
   phase.raise_objection(this);
   in_int_clr_vseqh.start(envh.vseqrh);
+  phase.drop_objection(this);
+endtask
+
+class gpio_test_bidir_clear extends gpio_test_base;
+  `uvm_component_utils(gpio_test_bidir_clear)
+
+  extern function new(string name, uvm_component parent);
+  extern function void build_phase(uvm_phase phase);
+  extern task run_phase(uvm_phase phase);
+endclass
+
+function gpio_test_bidir_clear::new(string name, uvm_component parent);
+  super.new(name, parent);
+endfunction
+
+function void gpio_test_bidir_clear::build_phase(uvm_phase phase);
+  //NOTE: making every pin act as input
+  rgpio_oe = 32'hffff_0000;
+  is_bidir_clr = 1;
+  super.build_phase(phase);
+endfunction
+
+task gpio_test_bidir_clear::run_phase(uvm_phase phase);
+  bidir_clr_vseqh = gpio_bidir_clear_vseq::type_id::create("bidir_clr_vseqh");
+  phase.raise_objection(this);
+  bidir_clr_vseqh.start(envh.vseqrh);
   phase.drop_objection(this);
 endtask

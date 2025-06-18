@@ -30,6 +30,7 @@ class env_config extends uvm_object;
   bit is_in_ext1_int2;
   bit is_in_ext2_int2;
   bit is_in_int_clr;
+  bit is_bidir_clr;
 
 
 endclass

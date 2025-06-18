@@ -42,6 +42,7 @@ class scoreboard extends uvm_scoreboard;
   int bidir_in_fail;
   int bidir_out_pins_config;
   int bidir_in_pins_config;
+  int bidir_in_int_pins_config;
   ///////////////////ref_model_signals////////////////////////////////////
   logic [31:0] extc_in;
   logic [31:0] in_mux;
@@ -227,13 +228,13 @@ function void scoreboard::check_phase(uvm_phase phase);
             `uvm_info("In_int1_verified", "Interrupt verified @ ptrig == 1", UVM_LOW)
           if (e_cfg.is_in_int2)
             `uvm_info("In_int2_verified", "Interrupt verified @ ptrig == 0", UVM_LOW)
-	  if (e_cfg.is_in_ext1_int1)
+          if (e_cfg.is_in_ext1_int1)
             `uvm_info("In_ext1_int1_verified", "Interrupt verified @ ptrig == 1 nec == 0", UVM_LOW)
-	  if (e_cfg.is_in_ext2_int1)
+          if (e_cfg.is_in_ext2_int1)
             `uvm_info("In_ext2_int1_verified", "Interrupt verified @ ptrig == 1 nec == 1", UVM_LOW)
-	  if (e_cfg.is_in_ext1_int2)
+          if (e_cfg.is_in_ext1_int2)
             `uvm_info("In_ext1_int2_verified", "Interrupt verified @ ptrig == 0 nec == 0", UVM_LOW)
-	  if (e_cfg.is_in_ext2_int2)
+          if (e_cfg.is_in_ext2_int2)
             `uvm_info("In_ext1_int2_verified", "Interrupt verified @ ptrig == 0 nec == 1", UVM_LOW)
         end else begin
           `uvm_info(get_type_name, "IRQ not generated, Interrupt not working", UVM_LOW)
@@ -279,69 +280,81 @@ function void scoreboard::check_phase(uvm_phase phase);
     end
   end
 
-//////////////////////////GPIO_as_bidirectional//////////////////////////////////////////////
-/*  if(e_cfg.is_bidir)begin
-	for(int i = 0; i <32; i++)begin
-		if(rgpio_oe[i])begin
-			`uvm_info(get_type_name,$sformatf("pin[%0d] is configured as output",i),UVM_LOW)
-			if(io_h.io_pad[i] == rgpio_out[i])begin
-			  //`uvm_info("OUT","Out working properly",UVM_LOW)	
-				bidir_out_pass++;
-			end
-			else begin
-				bidir_out_fail++;	
-			end
-		end
-		else begin
-			`uvm_info(get_type_name,$sformatf("pin[%0d] is configured as input",i),UVM_LOW)
-			if(rgpio_inte[i])begin
-			 `uvm_info(get_type_name,$sformatf("pin[%0d] is configured as interrupt,expecting IRQ",i),UVM_LOW)
-			end else begin
-				if(rgpio_in[i] == io_h.io_pad[i])begin
-				// `uvm_info("IN","Input without interrupt working properly",UVM_LOW)
-					bidir_in_pass++;
-				end else begin
-				 //`uvm_info("IN","io_pad not sampled properly",UVM_LOW)
-					bidir_in_fail++;
-				end
-			end
-		     end
-		end
-	end
-  end
-*/
-  if(e_cfg.is_bidir)begin
-    for(int i = 0;i<32;i++)begin
-      if(rgpio_oe[i])begin
-			  `uvm_info(get_type_name,$sformatf("pin[%0d] is configured as output",i),UVM_LOW)
+  //////////////////////////GPIO_as_bidirectional//////////////////////////////////////////////
+  if (e_cfg.is_bidir) begin
+    for (int i = 0; i < 32; i++) begin
+      if (rgpio_oe[i]) begin
+        `uvm_info(get_type_name, $sformatf("pin[%0d] is configured as output", i), UVM_LOW)
         bidir_out_pins_config++;
-        if(io_h.io_pad[i]==rgpio_out[i])begin
+        if (io_h.io_pad[i] == rgpio_out[i]) begin
           bidir_out_pass++;
         end else begin
           bidir_out_fail++;
-        end 
+        end
       end else begin
-			  `uvm_info(get_type_name,$sformatf("pin[%0d] is configured as input",i),UVM_LOW)
-        if(rgpio_inte[i])begin
-			   `uvm_info(get_type_name,$sformatf("pin[%0d] is configured as interrupt,expecting IRQ",i),UVM_LOW)
+        `uvm_info(get_type_name, $sformatf("pin[%0d] is configured as input", i), UVM_LOW)
+        if (rgpio_inte[i]) begin
+          `uvm_info(get_type_name, $sformatf("pin[%0d] is configured as interrupt, expecting IRQ",
+                                             i), UVM_LOW)
+          bidir_in_int_pins_config++;
         end else begin
-          if(rgpio_in[i] == io_h.io_pad[i])begin
-					  bidir_in_pass++;
+          if (rgpio_in[i] == io_h.io_pad[i]) begin
+            bidir_in_pass++;
           end else begin
-					  bidir_in_fail++;
+            bidir_in_fail++;
           end
         end
-      end else begin:
-
       end
     end
-    if(bidir_out_pass > 0)begin
-      `uvm_info("OUT","Out working properly",UVM_LOW)	
-      `uvm_info("OUT",$sformatf("no. of pins configured as output = %0d ,bidir_out_pass = %0d",bidir_out_pins_config,bidir_out_pass),UVM_LOW)
+    if (bidir_out_pass > 0) begin
+      `uvm_info("OUT", "Out working properly, rgpio_out is reflecting in io_pad", UVM_LOW)
+      `uvm_info("OUT", $sformatf("no. of pins configured as output = %0d, bidir_out_pass = %0d",
+                                 bidir_out_pins_config, bidir_out_pass), UVM_LOW)
+    end else if (bidir_out_fail > 0) begin
+      `uvm_info("OUT", "Out not working properly", UVM_LOW)
+      `uvm_info("OUT", $sformatf("no. of pins configured as output = %0d, bidir_out_fail = %0d",
+                                 bidir_out_pins_config, bidir_out_fail), UVM_LOW)
     end
-    else if(bidir_out_fail > 0)begin
-      `uvm_info("OUT","Out not working properly",UVM_LOW)	
-      `uvm_info("OUT",$sformatf("no. of pins configured as output = %0d ,bidir_out_fail = %0d",bidir_out_pins_config,bidir_out_fail),UVM_LOW)
+    if (bidir_in_pass > 0) begin
+      `uvm_info("IN", "In working properly, io_pad is reflecting in rgpio_in", UVM_LOW)
+      `uvm_info("IN", $sformatf("bidir_in_pass = %0d", bidir_in_pass), UVM_LOW)
+    end else if (bidir_in_fail > 0) begin
+      `uvm_info("IN", "In not working properly", UVM_LOW)
+      `uvm_info("IN", $sformatf("bidir_in_fail = %0d", bidir_in_fail), UVM_LOW)
     end
+    if (bidir_in_int_pins_config > 0) begin
+      for (int i = 0; i < 32; i++) begin
+        if (rgpio_inte[i]) begin
+          `uvm_info("IN_INT",
+                    $sformatf("Pin[%0d] is configured as interrupt with ptrig = %0b , nec = %0b ",
+                              i, rgpio_ptrig[i], rgpio_nec[i]), UVM_LOW)
+        end
+      end
+      if (rgpio_ints_e == rgpio_ints) begin
+        `uvm_info("IN_INT", "Ints matched with ref model", UVM_LOW)
+        if (apb_h.IRQ) `uvm_info("IN_INT", "IRQ genereated", UVM_LOW)
+        else `uvm_error("IN_INT", "IRQ not generated properly")
+      end else begin
+        `uvm_error("IN_INT", "Ints mismatched with ref model")
+      end
+    end
+  end
+
+  if (e_cfg.is_bidir_clr) begin
+    `uvm_info(get_type_name, $sformatf("rgpio_ints = %0h, rgpio_inte= %0h, rgpio_ctrl= %0h",
+                                       rgpio_ints, rgpio_inte, rgpio_ctrl), UVM_LOW)
+    if (~apb_h.IRQ) begin
+      `uvm_info(get_type_name, "IRQ LOW", UVM_LOW)
+      if (|rgpio_ints && rgpio_ctrl[0] == 0 && rgpio_ctrl[1] == 1) begin
+        `uvm_info(get_type_name, "Ctrl[inte] is reset, hence IRQ ==0 \t bidir clear success",
+                  UVM_LOW)
+      end
+    end
+  end
+
+  if (e_cfg.is_in_int_clr) begin
+    `uvm_info(get_type_name,
+              $sformatf("rgpio_ints = %0h, rgpio_ints_e = %0h ,rgpio_inte= %0h, rgpio_ctrl= %0h",
+                        rgpio_ints, rgpio_ints_e, rgpio_inte, rgpio_ctrl), UVM_LOW)
   end
 endfunction
