@@ -307,6 +307,7 @@ endfunction
 function void gpio_test_bidir::build_phase(uvm_phase phase);
   //NOTE: making last 16 bits act as output
   rgpio_oe = 32'hffff_0000;
+  is_bidir = 1;
   super.build_phase(phase);
 endfunction
 

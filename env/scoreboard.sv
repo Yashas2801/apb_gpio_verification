@@ -36,6 +36,12 @@ class scoreboard extends uvm_scoreboard;
   int ext_seq_pass;
   int ext_seq_fail;
 
+  int bidir_out_pass;
+  int bidir_out_fail;
+  int bidir_in_pass;
+  int bidir_in_fail;
+  int bidir_out_pins_config;
+  int bidir_in_pins_config;
   ///////////////////ref_model_signals////////////////////////////////////
   logic [31:0] extc_in;
   logic [31:0] in_mux;
@@ -271,6 +277,71 @@ function void scoreboard::check_phase(uvm_phase phase);
       `uvm_info(get_type_name, "external _clk sampling is not verified", UVM_LOW)
       `uvm_info(get_type_name, $sformatf("ext_seq_fail = %0d", ext_seq_fail), UVM_LOW)
     end
+  end
 
+//////////////////////////GPIO_as_bidirectional//////////////////////////////////////////////
+/*  if(e_cfg.is_bidir)begin
+	for(int i = 0; i <32; i++)begin
+		if(rgpio_oe[i])begin
+			`uvm_info(get_type_name,$sformatf("pin[%0d] is configured as output",i),UVM_LOW)
+			if(io_h.io_pad[i] == rgpio_out[i])begin
+			  //`uvm_info("OUT","Out working properly",UVM_LOW)	
+				bidir_out_pass++;
+			end
+			else begin
+				bidir_out_fail++;	
+			end
+		end
+		else begin
+			`uvm_info(get_type_name,$sformatf("pin[%0d] is configured as input",i),UVM_LOW)
+			if(rgpio_inte[i])begin
+			 `uvm_info(get_type_name,$sformatf("pin[%0d] is configured as interrupt,expecting IRQ",i),UVM_LOW)
+			end else begin
+				if(rgpio_in[i] == io_h.io_pad[i])begin
+				// `uvm_info("IN","Input without interrupt working properly",UVM_LOW)
+					bidir_in_pass++;
+				end else begin
+				 //`uvm_info("IN","io_pad not sampled properly",UVM_LOW)
+					bidir_in_fail++;
+				end
+			end
+		     end
+		end
+	end
+  end
+*/
+  if(e_cfg.is_bidir)begin
+    for(int i = 0;i<32;i++)begin
+      if(rgpio_oe[i])begin
+			  `uvm_info(get_type_name,$sformatf("pin[%0d] is configured as output",i),UVM_LOW)
+        bidir_out_pins_config++;
+        if(io_h.io_pad[i]==rgpio_out[i])begin
+          bidir_out_pass++;
+        end else begin
+          bidir_out_fail++;
+        end 
+      end else begin
+			  `uvm_info(get_type_name,$sformatf("pin[%0d] is configured as input",i),UVM_LOW)
+        if(rgpio_inte[i])begin
+			   `uvm_info(get_type_name,$sformatf("pin[%0d] is configured as interrupt,expecting IRQ",i),UVM_LOW)
+        end else begin
+          if(rgpio_in[i] == io_h.io_pad[i])begin
+					  bidir_in_pass++;
+          end else begin
+					  bidir_in_fail++;
+          end
+        end
+      end else begin:
+
+      end
+    end
+    if(bidir_out_pass > 0)begin
+      `uvm_info("OUT","Out working properly",UVM_LOW)	
+      `uvm_info("OUT",$sformatf("no. of pins configured as output = %0d ,bidir_out_pass = %0d",bidir_out_pins_config,bidir_out_pass),UVM_LOW)
+    end
+    else if(bidir_out_fail > 0)begin
+      `uvm_info("OUT","Out not working properly",UVM_LOW)	
+      `uvm_info("OUT",$sformatf("no. of pins configured as output = %0d ,bidir_out_fail = %0d",bidir_out_pins_config,bidir_out_fail),UVM_LOW)
+    end
   end
 endfunction

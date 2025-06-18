@@ -75,15 +75,6 @@ help:
 	@echo "  view_wave13   : View waveform for gpio_test_input_ext2_int2."
 	@echo "  view_wave14   : View waveform for gpio_test_input_int_clear."
 	@echo ""
-	@echo "Notes:"
-	@echo "- Simulator: Questa"
-	@echo "- RTL files: ../rtl/"
-	@echo "- Testbench files: ../top/, ../test/, ../io_agent/, ../env/, ../apb_agent/, ../aux_agent/"
-	@echo "- Coverage enabled with SVA; saved per test and merged for regression."
-	@echo "- Tests use random seed and UVM_MEDIUM verbosity."
-	@echo "- Waveform files: wave_fileX.wlf; Coverage reports: mem_covX (merged: mem_cov)."
-	@echo "- Run 'make regress' for full regression and coverage report."
-	@echo "- Ensure Questa is installed and configured."
 	@echo "=================================================================================="
 
 # Generic targets
