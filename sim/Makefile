@@ -178,10 +178,11 @@ run_test12_Questa: sv_cmp
 
 run_test13_Questa: sv_cmp
 	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH14) $(VERBOSITY) -wlf wave_file14.wlf -l test14.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_int_clear
+	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov14
 
 run_test14_Questa: sv_cmp
 	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH15) $(VERBOSITY) -wlf wave_file15.wlf -l test15.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_bidir_clear
-
+	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov15
 
 view_wave1_Questa:
 	vsim -view wave_file1.wlf

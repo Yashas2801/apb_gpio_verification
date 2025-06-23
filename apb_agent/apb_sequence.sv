@@ -639,6 +639,17 @@ task apb_read::body;
     start_item(req);
     `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
     assert (req.randomize() with {
+      PADDR == `GPIO_RGPIO_IN;
+      PWRITE == 1'b0;
+    });
+    `uvm_info(get_type_name, "configuring RGPIO_OE as all_outputs", UVM_LOW)
+    `uvm_info(get_type_name, $sformatf("printing from sequence \n %s", req.sprint()), UVM_HIGH)
+    finish_item(req);
+    `uvm_info(get_type_name, "finish_item unblocked", UVM_LOW)
+    ////////////////////////////////////////////////////////////////////////
+    start_item(req);
+    `uvm_info(get_type_name, "start_item unblocked", UVM_LOW)
+    assert (req.randomize() with {
       PADDR == `GPIO_RGPIO_OE;
       PWRITE == 1'b0;
     });

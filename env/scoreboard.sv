@@ -5,9 +5,83 @@ class scoreboard extends uvm_scoreboard;
   uvm_tlm_analysis_fifo #(aux_xtn) aux_fifo;
   uvm_tlm_analysis_fifo #(io_xtn) io_fifo;
 
-  apb_xtn apb_h;
-  io_xtn io_h;
-  aux_xtn aux_h;
+  apb_xtn apb_h,apb_cov_h;
+  io_xtn io_h,io_cov_h;
+  aux_xtn aux_h,aux_cov_h;
+  //outcome flags
+
+  bit test_passed_out;
+  bit test_passed_out_aux;
+  bit test_passed_in_int1;
+  bit test_passed_in_int2;
+  bit test_passed_in_ext1;
+  bit test_passed_in_ext2;
+  bit test_passed_bidir;
+  bit test_passed_in;
+  bit test_passed_in_ext1_int1;
+  bit test_passed_in_ext2_int1;
+  bit test_passed_in_ext1_int2;
+  bit test_passed_in_ext2_int2;
+  bit test_passed_in_int_clr;
+  bit test_passed_bidir_clr;
+//////////////////////coverage//////////////////
+  covergroup APB_CG;
+  option.per_instance = 1;
+
+    ADDR:coverpoint apb_cov_h.PADDR{
+      bins rgpio_in = {`GPIO_RGPIO_IN};
+      bins rgpio_out = {`GPIO_RGPIO_OUT};
+      bins rgpio_oe = {`GPIO_RGPIO_OE};
+      bins rgpio_inte = {`GPIO_RGPIO_INTE};
+      bins rgpio_ptrig = {`GPIO_RGPIO_PTRIG};
+      bins rgpio_aux = {`GPIO_RGPIO_AUX};
+      bins rgpio_ctrl = {`GPIO_RGPIO_CTRL};
+      bins rgpio_ints = {`GPIO_RGPIO_INTS};
+      bins rgpio_eclk = {`GPIO_RGPIO_ECLK};
+      bins rgpio_nec = {`GPIO_RGPIO_NEC};
+    }
+
+    RESET:coverpoint apb_cov_h.PRESETn{
+      bins yes_rst = {0};
+      bins not_rst = {1};
+    }
+    WDATA:coverpoint apb_cov_h.PWDATA{
+      bins data = {[0:32'hffff_ffff]}; 
+    }
+    WRITE:coverpoint apb_cov_h.PWRITE{
+      bins WRITING = {1};
+      bins READING = {0};
+    } 
+    PENABLE:coverpoint apb_cov_h.PENABLE{
+      bins PENABLE_HIGH = {1};
+      bins PENABLE_LOW = {0};
+    }
+    PSEL:coverpoint apb_cov_h.PSEL{
+      bins PSEL_HIGH = {1};
+      bins PSEL_LOW = {0};
+    }
+    Interrupt: coverpoint apb_cov_h.IRQ{
+      bins IRQ_HIGH = {1};
+      bins IRQ_LOW = {0};
+    }
+  endgroup
+
+  covergroup OUTCOME_CG;
+    OUT: coverpoint test_passed_out {bins pass = {1};} 
+    IN: coverpoint test_passed_in {bins pass = {1};} 
+    OUT_AUX: coverpoint test_passed_out_aux {bins pass = {1};} 
+    IN_INT1: coverpoint test_passed_in_int1 {bins pass = {1};} 
+    IN_INT2: coverpoint test_passed_in_int2 {bins pass = {1};} 
+    IN_EXT1: coverpoint test_passed_in_ext1 {bins pass = {1};} 
+    IN_EXT2: coverpoint test_passed_in_ext2 {bins pass = {1};} 
+    BIDIR: coverpoint test_passed_bidir {bins pass = {1};} 
+    IN_EXT1_INT1: coverpoint test_passed_in_ext1_int1 {bins pass = {1};} 
+    IN_EXT1_INT2: coverpoint test_passed_in_ext1_int2 {bins pass = {1};} 
+    IN_EXT2_INT1: coverpoint test_passed_in_ext2_int1 {bins pass = {1};} 
+    IN_EXT2_INT2: coverpoint test_passed_in_ext2_int2 {bins pass = {1};} 
+    BIDIR_CLR: coverpoint test_passed_bidir_clr {bins pass = {1};} 
+    IN_INT_CLR: coverpoint test_passed_in_int_clr {bins pass = {1};} 
+  endgroup
 
   //Local reg handels
   reg [31:0] rgpio_in;
@@ -26,7 +100,7 @@ class scoreboard extends uvm_scoreboard;
   uvm_status_e status;
 
   env_config e_cfg;
-
+  
   int out_seq_pass;
   int out_seq_error;
   int in_seq_pass;
@@ -78,6 +152,8 @@ function scoreboard::new(string name, uvm_component parent);
   apb_fifo = new("apb_fifo", this);
   aux_fifo = new("aux_fifo", this);
   io_fifo  = new("io_fifo", this);
+  APB_CG = new();
+  OUTCOME_CG = new;
 endfunction
 
 function void scoreboard::build_phase(uvm_phase phase);
@@ -127,8 +203,13 @@ task scoreboard::run_phase(uvm_phase phase);
   forever begin
     fork
       apb_fifo.get(apb_h);
+      apb_cov_h = apb_h;
       io_fifo.get(io_h);
+      io_cov_h = io_h;
       aux_fifo.get(aux_h);
+      aux_cov_h = aux_h;
+ //     $display("APB_CG = %p",APB_CG);
+      if(apb_cov_h != null) APB_CG.sample();
     join
     sample_reg;
   end
@@ -148,6 +229,7 @@ function void scoreboard::check_phase(uvm_phase phase);
     end
     if (out_seq_pass > 0) begin
       `uvm_info(get_type_name, "gpio as output is verified", UVM_LOW)
+      test_passed_out = 1;
       `uvm_info(get_type_name, $sformatf("out_seq_pass = %0d", out_seq_pass), UVM_LOW)
     end else begin
       `uvm_info(get_type_name, "gpio as output is wrong", UVM_LOW)
@@ -167,6 +249,7 @@ function void scoreboard::check_phase(uvm_phase phase);
     end
     if (aux_seq_pass > 0) begin
       `uvm_info(get_type_name, "gpio as output_aux is verified", UVM_LOW)
+      test_passed_out_aux = 1;
       `uvm_info(get_type_name, $sformatf("aux_seq_pass = %0d", aux_seq_pass), UVM_LOW)
     end else begin
       `uvm_info(get_type_name, "gpio as output_aux is failed", UVM_LOW)
@@ -189,6 +272,7 @@ function void scoreboard::check_phase(uvm_phase phase);
     end
     if (in_seq_pass > 0) begin
       `uvm_info(get_type_name, "gpio as input is verified", UVM_LOW)
+      test_passed_in = 1;
       `uvm_info(get_type_name, $sformatf("in_seq_pass = %0d", in_seq_pass), UVM_LOW)
     end else begin
       `uvm_info(get_type_name, "gpio as input is failed", UVM_LOW)
@@ -226,16 +310,22 @@ function void scoreboard::check_phase(uvm_phase phase);
           `uvm_info("interrupt verified", "IRQ generated and interrupt verified", UVM_LOW)
           if (e_cfg.is_in_int1)
             `uvm_info("In_int1_verified", "Interrupt verified @ ptrig == 1", UVM_LOW)
+            test_passed_in_int1 =1;
           if (e_cfg.is_in_int2)
             `uvm_info("In_int2_verified", "Interrupt verified @ ptrig == 0", UVM_LOW)
+            test_passed_in_int2 =1;
           if (e_cfg.is_in_ext1_int1)
             `uvm_info("In_ext1_int1_verified", "Interrupt verified @ ptrig == 1 nec == 0", UVM_LOW)
+            test_passed_in_ext1_int1 =1;
           if (e_cfg.is_in_ext2_int1)
             `uvm_info("In_ext2_int1_verified", "Interrupt verified @ ptrig == 1 nec == 1", UVM_LOW)
+            test_passed_in_ext2_int1 =1;
           if (e_cfg.is_in_ext1_int2)
             `uvm_info("In_ext1_int2_verified", "Interrupt verified @ ptrig == 0 nec == 0", UVM_LOW)
+            test_passed_in_ext1_int2 =1;
           if (e_cfg.is_in_ext2_int2)
-            `uvm_info("In_ext1_int2_verified", "Interrupt verified @ ptrig == 0 nec == 1", UVM_LOW)
+            `uvm_info("In_ext2_int2_verified", "Interrupt verified @ ptrig == 0 nec == 1", UVM_LOW)
+            test_passed_in_ext2_int2 =1;
         end else begin
           `uvm_info(get_type_name, "IRQ not generated, Interrupt not working", UVM_LOW)
         end
@@ -270,9 +360,11 @@ function void scoreboard::check_phase(uvm_phase phase);
       `uvm_info(get_type_name, $sformatf("ext_seq_pass = %0d", ext_seq_pass), UVM_LOW)
       if (e_cfg.is_in_ext1) begin
         `uvm_info("input_ext1", "input_external_clk_posedge pass", UVM_LOW)
+            test_passed_in_ext1 =1;
       end
       if (e_cfg.is_in_ext2) begin
         `uvm_info("input_ext2", "input_external_clk_negedge pass", UVM_LOW)
+            test_passed_in_ext2 =1;
       end
     end else begin
       `uvm_info(get_type_name, "external _clk sampling is not verified", UVM_LOW)
@@ -338,6 +430,9 @@ function void scoreboard::check_phase(uvm_phase phase);
         `uvm_error("IN_INT", "Ints mismatched with ref model")
       end
     end
+    if(bidir_out_pass >0 && bidir_in_pass >0 && apb_h.IRQ)begin
+      test_passed_bidir = 1;
+    end
   end
 
   if (e_cfg.is_bidir_clr) begin
@@ -348,6 +443,7 @@ function void scoreboard::check_phase(uvm_phase phase);
       if (|rgpio_ints && rgpio_ctrl[0] == 0 && rgpio_ctrl[1] == 1) begin
         `uvm_info(get_type_name, "Ctrl[inte] is reset, hence IRQ ==0 \t bidir clear success",
                   UVM_LOW)
+        test_passed_bidir_clr = 1;
       end
     end
   end
@@ -356,5 +452,7 @@ function void scoreboard::check_phase(uvm_phase phase);
     `uvm_info(get_type_name,
               $sformatf("rgpio_ints = %0h, rgpio_ints_e = %0h ,rgpio_inte= %0h, rgpio_ctrl= %0h",
                         rgpio_ints, rgpio_ints_e, rgpio_inte, rgpio_ctrl), UVM_LOW)
+  test_passed_in_int_clr = 1;
   end
+    OUTCOME_CG.sample;
 endfunction
