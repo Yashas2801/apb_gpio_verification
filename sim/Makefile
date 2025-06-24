@@ -122,7 +122,7 @@ cov: cov_$(SIMULATOR)
 sv_cmp_Questa:
 	vlib $(work)
 	vmap work $(work)
-	vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1)
+	vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv
 
 run_test_Questa: sv_cmp
 	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH1) $(VERBOSITY) -wlf wave_file1.wlf -l test1.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_base

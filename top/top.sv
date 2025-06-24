@@ -28,6 +28,17 @@ module top;
   interface_aux intf_aux (PCLK);
   interface_io intf_io (PCLK);
 
+  bind i1 gpio_assertions a1(
+      .PCLK(PCLK),
+      .PRESETn(intf_apb.PRESETn),
+      .PSEL(intf_apb.PSEL),
+      .PENABLE(intf_apb.PENABLE),
+      .PWRITE(intf_apb.PWRITE),
+      .PREADY(intf_apb.PREADY),
+      .PADDR(intf_apb.PADDR),
+      .PWDATA(intf_apb.PWDATA)
+);
+
   initial begin
     uvm_config_db#(virtual interface_apb)::set(null, "*", "vif_apb", intf_apb);
     uvm_config_db#(virtual interface_aux)::set(null, "*", "vif_aux", intf_aux);
