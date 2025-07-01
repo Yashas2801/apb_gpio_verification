@@ -45,6 +45,11 @@ property p7;
     (!PSEL) && (!PENABLE)|-> !PREADY;
 endproperty
 
+property p8;
+  @(posedge PCLK) disable iff(~PRESETn)
+    PENABLE |-> ~$past(PREADY,1) ;
+endproperty
+
 P1:assert property(p1)
   $display("assertion pass for p1");
 else $display("assertion fail for p1");
@@ -73,6 +78,10 @@ P7:assert property(p7)
   $display("assertion pass for p7");
 else $display("assertion fail for p7");
 
+P8:assert property(p8)
+  $display("assertion pass for p8");
+else $display("assertion fail for p8");
+
 C1: cover property (p1);
 C2: cover property (p2);
 C3: cover property (p3);
@@ -80,7 +89,7 @@ C4: cover property (p4);
 C5: cover property (p5);
 C6: cover property (p6);
 C7: cover property (p7);
-
+C8: cover property (p8);
 
 
 

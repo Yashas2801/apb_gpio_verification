@@ -42,10 +42,12 @@ task apb_monitor::monitor();
   xtn.PRESETn = vif.PRESETn;
   xtn.PSEL = vif.PSEL;
   xtn.PENABLE = vif.PENABLE;
+  ana_port.write(xtn);
   while (!(vif.mon_cb.PSEL && !vif.mon_cb.PENABLE)) begin
     @(vif.mon_cb);
   end
   //NOTE: Starting to moniter the signals when setup state is entered
+  xtn.PENABLE = vif.PENABLE;
   xtn.PWRITE = vif.mon_cb.PWRITE;
   xtn.PWDATA = vif.mon_cb.PWDATA;
   xtn.PADDR  = vif.mon_cb.PADDR;
