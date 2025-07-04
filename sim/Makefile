@@ -25,6 +25,10 @@ VSIMBATCH15 = -c -do "log -r /*; coverage save -onexit mem_cov15; run -all; exit
 
 VERBOSITY = +UVM_VERBOSITY=UVM_MEDIUM
 
+# Helper macro to log all output (stdout+stderr) for a target to both terminal and file
+# Usage: $(call LOG_WRAPPER,command,logfile)
+LOG_WRAPPER = ( { $(1); } 2>&1 | tee $(2) )
+
 # Help target
 help:
 	@echo "=================================================================================="
@@ -124,65 +128,140 @@ sv_cmp_Questa:
 	vmap work $(work)
 	vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv
 
-run_test_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH1) $(VERBOSITY) -wlf wave_file1.wlf -l test1.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_base
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov1
+run_test_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH1) $(VERBOSITY) -wlf wave_file1.wlf -l test1.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_base && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov1 \
+	) 2>&1 | tee test1_full.log
 
-run_test1_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH2) $(VERBOSITY) -wlf wave_file2.wlf -l test2.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_output
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov2
+run_test1_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH2) $(VERBOSITY) -wlf wave_file2.wlf -l test2.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_output && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov2 \
+	) 2>&1 | tee test2_full.log
 
-run_test2_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH3) $(VERBOSITY) -wlf wave_file3.wlf -l test3.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_output_aux
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov3
+run_test2_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH3) $(VERBOSITY) -wlf wave_file3.wlf -l test3.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_output_aux && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov3 \
+	) 2>&1 | tee test3_full.log
 
-run_test3_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH4) $(VERBOSITY) -wlf wave_file4.wlf -l test4.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_int1
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov4
+run_test3_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH4) $(VERBOSITY) -wlf wave_file4.wlf -l test4.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_int1 && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov4 \
+	) 2>&1 | tee test4_full.log
 
-run_test4_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH5) $(VERBOSITY) -wlf wave_file5.wlf -l test5.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_int2
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov5
+run_test4_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH5) $(VERBOSITY) -wlf wave_file5.wlf -l test5.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_int2 && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov5 \
+	) 2>&1 | tee test5_full.log
 
-run_test5_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH6) $(VERBOSITY) -wlf wave_file6.wlf -l test6.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext1
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov6
+run_test5_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH6) $(VERBOSITY) -wlf wave_file6.wlf -l test6.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext1 && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov6 \
+	) 2>&1 | tee test6_full.log
 
-run_test6_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH7) $(VERBOSITY) -wlf wave_file7.wlf -l test7.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext2
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov7
+run_test6_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH7) $(VERBOSITY) -wlf wave_file7.wlf -l test7.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext2 && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov7 \
+	) 2>&1 | tee test7_full.log
 
-run_test7_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH8) $(VERBOSITY) -wlf wave_file8.wlf -l test8.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_bidir
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov8
+run_test7_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH8) $(VERBOSITY) -wlf wave_file8.wlf -l test8.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_bidir && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov8 \
+	) 2>&1 | tee test8_full.log
 
-run_test8_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH9) $(VERBOSITY) -wlf wave_file9.wlf -l test9.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov9
+run_test8_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH9) $(VERBOSITY) -wlf wave_file9.wlf -l test9.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov9 \
+	) 2>&1 | tee test9_full.log
 
-run_test9_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH10) $(VERBOSITY) -wlf wave_file10.wlf -l test10.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext1_int1
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov10
+run_test9_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH10) $(VERBOSITY) -wlf wave_file10.wlf -l test10.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext1_int1 && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov10 \
+	) 2>&1 | tee test10_full.log
 
-run_test10_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH11) $(VERBOSITY) -wlf wave_file11.wlf -l test11.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext2_int1
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov11
+run_test10_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH11) $(VERBOSITY) -wlf wave_file11.wlf -l test11.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext2_int1 && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov11 \
+	) 2>&1 | tee test11_full.log
 
-run_test11_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH12) $(VERBOSITY) -wlf wave_file12.wlf -l test12.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext1_int2
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov12
+run_test11_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH12) $(VERBOSITY) -wlf wave_file12.wlf -l test12.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext1_int2 && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov12 \
+	) 2>&1 | tee test12_full.log
 
-run_test12_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH13) $(VERBOSITY) -wlf wave_file13.wlf -l test13.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext2_int2
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov13
+run_test12_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH13) $(VERBOSITY) -wlf wave_file13.wlf -l test13.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_ext2_int2 && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov13 \
+	) 2>&1 | tee test13_full.log
 
-run_test13_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH14) $(VERBOSITY) -wlf wave_file14.wlf -l test14.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_int_clear
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov14
+run_test13_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH14) $(VERBOSITY) -wlf wave_file14.wlf -l test14.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_input_int_clear && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov14 \
+	) 2>&1 | tee test14_full.log
 
-run_test14_Questa: sv_cmp
-	vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH15) $(VERBOSITY) -wlf wave_file15.wlf -l test15.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_bidir_clear
-	vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov15
+run_test14_Questa:
+	( \
+	  vlib $(work) && \
+	  vmap work $(work) && \
+	  vlog -work $(work) $(RTL) $(INC) $(SVTB2) $(SVTB1) ../assertions/gpio_assertions.sv && \
+	  vsim -cvgperinstance $(VSIMOPT) $(VSIMCOV) $(VSIMBATCH15) $(VERBOSITY) -wlf wave_file15.wlf -l test15.log -sv_seed random work.top +UVM_TESTNAME=gpio_test_bidir_clear && \
+	  vcover report -cvg -details -nocompactcrossbins -codeAll -assert -directive -html mem_cov15 \
+	) 2>&1 | tee test15_full.log
 
 view_wave1_Questa:
 	vsim -view wave_file1.wlf
