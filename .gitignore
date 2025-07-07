@@ -1,3 +1,4 @@
  sim/*
 ! sim/Makefile
 SCOREBOARD_IMPROVEMENTS.md
+.gitignore
